@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/custom.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="main">
+        <header id="header">Simply Library</header>
+
+        <div id="content">
+            <table>
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Author</th>
+                        <th scope="col">Borrower</th>
+                        <th scope="col">From</th>
+                        <th scope="col">To</th>
+                        <th scope="col">Duration</th>
+                        <th scope="col">Not Available / Borrowed</th>
+                        <th scope="col">Action</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>03123456</td> 
+                        <td>Harry Potter and the Chamber of Secret</td>
+                        <td>JK Rowling</td>
+                        <td>User A</td>
+                        <td>25 Dec 2024</td>
+                        <td>3 Jan 2025</td>
+                        <td>5</td>
+                        <td>
+                            <input title="Not Read" type="checkbox" name="read-status" id="read-1">
+                        </td>
+                        <td>
+                            <div title="View / Edit Book" class="icon"><img src="./images/svg/edit.svg"
+                                    alt="View / Edit Book"></div>
+
+                            <div title="Remove" class="icon"><img src="./images/svg/delete.svg" alt="Remove"></div>
+
+                            <div title="Borrow / Return" class="icon"><img src="./images/svg/book.svg" alt="Borrow / Return"></div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>03123457</td>  
+                        <td>Harry Potter and the Chamber of Secret</td>
+                        <td>JK Rowling</td>
+                        <td>User B</td>
+                        <td>25 Dec 2024</td>
+                        <td>3 Jan 2025</td>
+                        <td>5</td>
+                        <td>
+                            <input title="Not Read" type="checkbox" name="read-status" id="read-1">
+                        </td>
+                        <td>
+                            <div title="View / Edit" class="icon"><img src="./images/svg/edit.svg"
+                                    alt="View / Edit"></div>
+
+                            <div title="View / Edit" class="icon"><img src="./images/svg/delete.svg" alt="View / Edit">
+                            </div>
+
+                            <div title="Borrow / Return" class="icon"><img src="./images/svg/book.svg" alt="Borrow / Return"></div> 
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button type="button" title="Add New Book">+</button>
+        </div>
+
+        <dialog>    
+            <form method="dialog"> 
+                <button class="close-btn" formnovalidate>X</button>
+                <div class="img-box flex-center">
+                    <p>Add a cover image</p> 
+                    <img src="./images/svg/add_a_photo.svg" alt="">
+                </div> 
+
+                <div class="forms">
+                    <label for="book-id">ID <span class="aria-required">*</span></label>
+                    <input type="text" name="book-id" id="book-id" required>
+
+                    <div class="edit icon">
+                        <img src="./images/svg/edit.svg" alt="Edit">
+                    </div>
+                </div>
+
+                <div class="form-set">
+                    <label for="book-title">Title <span class="aria-required">*</span></label> 
+                    <input type="text" name="book-title" id="book-title" required> 
+                    <div class="edit icon">
+                        <img src="./images/svg/edit.svg" alt="Edit">
+                    </div>
+                </div>
+
+                <div class="form-set">
+                    <label for="book-author">Author</label>
+                    <input type="text" name="book-author" id="book-author">
+                    <div class="edit icon">
+                        <img src="./images/svg/edit.svg" alt="Edit">
+                    </div>
+                </div>
+
+                <div class="form-set">
+                    <label for="book-genre">Genre</label>
+                    <input type="text" name="book-genre" id="book-genre">
+                    <div class="edit icon">
+                        <img src="./images/svg/edit.svg" alt="Edit">
+                    </div>
+                </div>
+
+                <div class="form-set">
+                    <label for="book-pages">Total Pages</label>
+                    <input type="number" name="book-pages" id="book-pages">
+                    <div class="edit icon">
+                        <img src="./images/svg/edit.svg" alt="Edit">
+                    </div>
+                </div>
+
+                <div class="form-set">
+                    <label for="book-summary">Summary / Descriptions</label>
+                    <textarea name="book-summary" id="book-summary"></textarea>
+                    <div class="edit icon">
+                        <img src="./images/svg/edit.svg" alt="Edit">
+                    </div>
+                </div>
+                
+                <button class="save-btn">Save</button>
+                <button class="cancel-btn" formnovalidate>Cancel</button> 
+            </form>
+        </dialog>
+
+        <dialog> 
+            <form method="dialog">
+                <button class="close-btn" formnovalidate>X</button> 
+            </form> 
+
+            <div class="title">To Be <span class="status">Borrowed</span>: <span class="selected-book">Harry Potter and the Chamber of Secret</span></div>
+            
+            <form method="dialog">
+                <fieldset> 
+                    <div class="existing-user">
+                        <input type="radio" name="user-status" id="rd-existing" checked>
+                        <label for="rd-existing">Existing User</label>
+                    </div>
+                
+                    <div class="new-user">
+                        <input type="radio" name="user-status" id="rd-new">
+                        <label for="rd-new">New User</label>
+                    </div>
+                </fieldset>
+
+                <div class="form-set">
+                    <label for="user-member-id">Member ID</label>
+                    <input type="text" name="user-member-id" id="user-member-id" placeholder="Search Member ID"> 
+                </div>
+
+                <div class="form-set">
+                    <label for="user-first-name">First Name</label>
+                    <input type="text" name="user-first-name" id="user-first-name"> 
+                </div>
+
+                <div class="form-set">
+                    <label for="user-last-name">Last Name</label>
+                    <input type="text" name="user-last-name" id="user-last-name"> 
+                </div>
+
+                <div class="form-set">
+                    <label for="user-borrow-duration">Borrow Duration</label>
+                    <input type="date" name="user-borrow-duration" id="user-borrow-duration"> 
+                </div>
+
+                <div class="form-set">
+                    <label for="user-borrow-date">Borrow Date</label>
+                    <input type="date" name="user-borrow-date" id="user-borrow-date"> 
+                </div>
+
+                <div class="form-set">
+                    <label for="user-return-date">Return Date</label>
+                    <input type="date" name="user-return-date" id="user-return-date"> 
+                </div>
+
+                <div class="form-set">
+                    <label for="user-borrow-duration">Duration (Days)</label>
+                    <input type="number" name="user-borrow-duration" id="user-borrow-duration"> 
+                </div>
+
+                <button class="borrow-btn">Borrow Book</button>
+                <button class="return-btn">Return Book</button>
+                <button class="cancel" formnovalidate>Cancel</button>   
+            </form>
+        </dialog>
+
+        <dialog>
+            <div class="confirmation-msg">Are you sure to proceed?</div>
+            <div class="decision-btn">
+                <button class="yes-btn">Yes</button>
+                <button class="no-btn">Cancel</button>
+            </div>
+        </dialog>
+ 
+        <footer id="footer">&copy; 2025 All Righs Reserved by CyS3cGuy</footer>
+    </div>
+
+    <script>
+        document.querySelector("#file").addEventListener("change", e => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    console.log(e.target.result); 
+                } 
+                
+                reader.readAsDataURL(file);         
+            }
+        }); 
+    </script>
+</body>
+
+</html>
