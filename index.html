@@ -33,7 +33,7 @@
                         <th scope="col">From</th>
                         <th scope="col">To</th>
                         <th scope="col">Duration</th>
-                        <th scope="col">Not Available / Borrowed</th>
+                        <th scope="col">Availability</th>
                         <th scope="col">Action</th>
 
                     </tr>
@@ -41,16 +41,14 @@
 
                 <tbody>
                     <tr>
-                        <td>03123456</td> 
-                        <td>Harry Potter and the Chamber of Secret</td>
+                        <td>031234</td> 
+                        <td>Harry Potter</td>
                         <td>JK Rowling</td>
-                        <td>User A</td>
+                        <td>Alex Mia</td>
                         <td>25 Dec 2024</td>
                         <td>3 Jan 2025</td>
                         <td>5</td>
-                        <td>
-                            <input title="Not Read" type="checkbox" name="read-status" id="read-1">
-                        </td>
+                        <td>Available</td>
                         <td>
                             <div title="View / Edit Book" class="icon"><img src="./images/svg/edit.svg"
                                     alt="View / Edit Book"></div>
@@ -58,28 +56,6 @@
                             <div title="Remove" class="icon"><img src="./images/svg/delete.svg" alt="Remove"></div>
 
                             <div title="Borrow / Return" class="icon"><img src="./images/svg/book.svg" alt="Borrow / Return"></div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>03123457</td>  
-                        <td>Harry Potter and the Chamber of Secret</td>
-                        <td>JK Rowling</td>
-                        <td>User B</td>
-                        <td>25 Dec 2024</td>
-                        <td>3 Jan 2025</td>
-                        <td>5</td>
-                        <td>
-                            <input title="Not Read" type="checkbox" name="read-status" id="read-1">
-                        </td>
-                        <td>
-                            <div title="View / Edit" class="icon"><img src="./images/svg/edit.svg"
-                                    alt="View / Edit"></div>
-
-                            <div title="View / Edit" class="icon"><img src="./images/svg/delete.svg" alt="View / Edit">
-                            </div>
-
-                            <div title="Borrow / Return" class="icon"><img src="./images/svg/book.svg" alt="Borrow / Return"></div> 
                         </td>
                     </tr>
                 </tbody>
@@ -222,18 +198,23 @@
         <footer id="footer">&copy; 2025 All Righs Reserved by CyS3cGuy</footer>
     </div>
 
+    <script src="./js/utility.js"></script>  
+    <script src="./js/constructor.js"></script>
+    <script src="./js/db.js"></script>
+    
+
     <script>
-        document.querySelector("#file").addEventListener("change", e => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    console.log(e.target.result); 
-                } 
+        // document.querySelector("#file").addEventListener("change", e => {
+        //     const file = e.target.files[0];
+        //     if (file) {
+        //         const reader = new FileReader();
+        //         reader.onload = function (e) {
+        //             console.log(e.target.result); 
+        //         } 
                 
-                reader.readAsDataURL(file);         
-            }
-        }); 
+        //         reader.readAsDataURL(file);         
+        //     }
+        // });  
     </script>
 </body>
 
