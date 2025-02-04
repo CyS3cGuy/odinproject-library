@@ -50,12 +50,12 @@
                         <td>5</td>
                         <td>Available</td>
                         <td>
-                            <div title="View / Edit Book" class="icon"><img src="./images/svg/edit.svg"
+                            <div title="View / Edit Book" class="icon edit"><img src="./images/svg/edit.svg"
                                     alt="View / Edit Book"></div>
 
-                            <div title="Remove" class="icon"><img src="./images/svg/delete.svg" alt="Remove"></div>
+                            <div title="Remove" class="icon delete"><img src="./images/svg/delete.svg" alt="Remove"></div>
 
-                            <div title="Borrow / Return" class="icon"><img src="./images/svg/book.svg" alt="Borrow / Return"></div>
+                            <div title="Borrow / Return" class="icon borrow"><img src="./images/svg/book.svg" alt="Borrow / Return"></div>
                         </td>
                     </tr>
                 </tbody>
@@ -64,34 +64,30 @@
             <button type="button" title="Add New Book">+</button>
         </div>
 
-        <dialog>    
+        <dialog id="book-operate">      
             <form method="dialog"> 
-                <button class="close-btn" formnovalidate>X</button>
-                <div class="img-box flex-center">
+                <button class="close-btn close-modal" formnovalidate>X</button>
+                <div id="book-cover" class="img-box flex-center">
                     <p>Add a cover image</p> 
-                    <img src="./images/svg/add_a_photo.svg" alt="">
+                    <img src="./images/svg/add_a_photo.svg" alt="Add a Photo" class="add-photo-trigger">
                 </div> 
 
-                <div class="forms">
+                <div class="form-set">
                     <label for="book-id">ID <span class="aria-required">*</span></label>
-                    <input type="text" name="book-id" id="book-id" required>
-
-                    <div class="edit icon">
-                        <img src="./images/svg/edit.svg" alt="Edit">
-                    </div>
+                    <input class="input" type="text" name="book-id" id="book-id" data-input-field="id" required>
                 </div>
 
                 <div class="form-set">
                     <label for="book-title">Title <span class="aria-required">*</span></label> 
-                    <input type="text" name="book-title" id="book-title" required> 
+                    <input class="input" type="text" name="book-title" id="book-title" data-input-field="title" required> 
                     <div class="edit icon">
                         <img src="./images/svg/edit.svg" alt="Edit">
                     </div>
                 </div>
 
                 <div class="form-set">
-                    <label for="book-author">Author</label>
-                    <input type="text" name="book-author" id="book-author">
+                    <label for="book-author">Author <span class="aria-required">*</span></label> 
+                    <input class="input" type="text" name="book-author" id="book-author" data-input-field="author" required>
                     <div class="edit icon">
                         <img src="./images/svg/edit.svg" alt="Edit">
                     </div>
@@ -99,7 +95,7 @@
 
                 <div class="form-set">
                     <label for="book-genre">Genre</label>
-                    <input type="text" name="book-genre" id="book-genre">
+                    <input class="input" type="text" name="book-genre" id="book-genre" data-input-field="genre">
                     <div class="edit icon">
                         <img src="./images/svg/edit.svg" alt="Edit">
                     </div>
@@ -107,7 +103,7 @@
 
                 <div class="form-set">
                     <label for="book-pages">Total Pages</label>
-                    <input type="number" name="book-pages" id="book-pages">
+                    <input class="input" type="number" name="book-pages" id="book-pages" data-input-field="numPages">
                     <div class="edit icon">
                         <img src="./images/svg/edit.svg" alt="Edit">
                     </div>
@@ -115,14 +111,14 @@
 
                 <div class="form-set">
                     <label for="book-summary">Summary / Descriptions</label>
-                    <textarea name="book-summary" id="book-summary"></textarea>
+                    <textarea class="input" name="book-summary" id="book-summary" data-input-field="summary"></textarea>
                     <div class="edit icon">
                         <img src="./images/svg/edit.svg" alt="Edit">
                     </div>
                 </div>
                 
                 <button class="save-btn">Save</button>
-                <button class="cancel-btn" formnovalidate>Cancel</button> 
+                <button class="cancel-btn close-modal" formnovalidate>Return</button>  
             </form>
         </dialog>
 
@@ -198,23 +194,25 @@
         <footer id="footer">&copy; 2025 All Righs Reserved by CyS3cGuy</footer>
     </div>
 
+    <input type="file" name="file" id="file">
+
     <script src="./js/utility.js"></script>  
     <script src="./js/constructor.js"></script>
     <script src="./js/db.js"></script>
+    <script src="./js/app.js"></script> 
     
-
     <script>
-        // document.querySelector("#file").addEventListener("change", e => {
-        //     const file = e.target.files[0];
-        //     if (file) {
-        //         const reader = new FileReader();
-        //         reader.onload = function (e) {
-        //             console.log(e.target.result); 
-        //         } 
+        document.querySelector("#file").addEventListener("change", e => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    console.log(e.target.result); 
+                } 
                 
-        //         reader.readAsDataURL(file);         
-        //     }
-        // });  
+                reader.readAsDataURL(file);         
+            }
+        });  
     </script>
 </body>
 

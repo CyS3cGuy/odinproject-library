@@ -4,7 +4,9 @@ table {
 } 
 
 dialog {
-    width: 70%;    
+    width: 70%;  
+    position: absolute;  
+    top: 0;   
 }
 
 .flex-center {
@@ -15,7 +17,7 @@ dialog {
 
 .img-box {
     
-    width: 100%;
+    width: 40%;  
     aspect-ratio: 1;
     background-color: transparent;  
     transition: 100ms;  
@@ -23,6 +25,18 @@ dialog {
     
 }
 
+.icon {
+    cursor: pointer; 
+}
+
+.icon:hover {
+    background-color: rgb(0,0,0,0.2);  
+}
+
 .img-box:hover {
     background-color: rgb(0,0,0,0.5); 
+}
+
+#book-cover {
+    background-size: cover;   
 }
