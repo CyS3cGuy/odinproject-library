@@ -28,7 +28,7 @@ function User(memberid, firstName, lastName) {
 function createBook(id, title, author, genre, numPages, summary, coverImgURL) {
     let newBook = new Book(id, title, author, genre, numPages, summary, coverImgURL);
     library.push(newBook);
-    newBook.createTableRow(id, title, author);
+    newBook.createTableRow(id, title, author); 
 }
 
 function createUser(memberid, firstName, lastName) {
@@ -116,3 +116,8 @@ Book.prototype.createTableRow = function () {
 
     tableRows.push(tableRow); 
 } 
+
+Book.prototype.addEditListenerForNewRow = function (listenerCallBack) {
+    tableRows.at(-1).clickables.edit.wrapper.bookState = "existing";   
+    tableRows.at(-1).clickables.edit.wrapper.addEventListener("click", listenerCallBack);
+}

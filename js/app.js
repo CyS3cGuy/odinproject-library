@@ -1,35 +1,50 @@
 const tableLibrary = document.querySelector("#content table");
+const addBookBtn = document.querySelector("#content #add-book-btn");
 const virtualFileInput = createFileInput();
 const reader = new FileReader();
 
 
 tableLibrary.querySelectorAll(".icon.edit").forEach(eachEditIcon => {
+    // Model
     eachEditIcon.bookState = "existing";
-    eachEditIcon.addEventListener("click", showBookOpsModal, false);
+    eachEditIcon.addEventListener("click", showBookOpsModal);
+
+    // View
+})
+
+addBookBtn.addEventListener("click", e => {
+    let btn = e.currentTarget;
+    btn.bookState = "new";
+
+    showBookOpsModal(e);
 })
 
 modals.bookOps.querySelector("#book-cover .add-photo-trigger").addEventListener("click", () => virtualFileInput.click());
 
-// Call reset of all the metadata and buffer variables of a book
-modals.bookOps.querySelectorAll(".close-modal").forEach(eachButton => {
-    eachButton.addEventListener("click", () => buffer.book.func.reset.call(buffer.book));
+modals.bookOps.addEventListener("close", () => {
+    // Model
+    buffer.book.func.reset.call(buffer.book);
+
+    // View
+    modals.func.bookOps.resetInputVal();
+    modals.func.bookOps.toggleInput(false);
+    modals.func.bookOps.toggleSaveButton(true);
+    modals.func.bookOps.toggleEditIcon(false);
 })
 
 modals.bookOps.querySelectorAll(".form-set .edit").forEach(eachEdit => {
     eachEdit.addEventListener("click", e => {
         let inputElement = eachEdit.previousElementSibling;
         inputElement.disabled = false;
-
     })
 })
 
 // Logic for the modals input
 // Check if the input has been changed 
 // Determine if the save button should be enabled or disabled 
-Array.from(modals.bookOps.querySelectorAll(".form-set .input")).forEach((eachInput, ind, allInputs) => {
-    let saveButton = modals.bookOps.querySelector(".save-btn");
-    eachInput.addEventListener("input", () => {
+Array.from(modals.bookOps.querySelectorAll(".form-set .input")).forEach(eachInput => {
 
+    eachInput.addEventListener("input", () => {
 
         if (buffer.book.metadata.state === "existing") {
             let bookSelected = buffer.book.instance;
@@ -38,16 +53,8 @@ Array.from(modals.bookOps.querySelectorAll(".form-set .input")).forEach((eachInp
 
             eachInput.changed = bookSelected[currentField] === inputVal ? false : true;
 
-            // Check for whether any of the inputs have been changed
-            let overallChangeStatus = false;
-
-            allInputs.forEach(each => {
-
-                overallChangeStatus = overallChangeStatus || each.changed;
-            })
-            saveButton.disabled = overallChangeStatus ? false : true;
-
-
+            // Check for whether any of the inputs have been changed and enable/disable save button
+            modals.func.bookOps.toggleSaveButton(modals.func.bookOps.checkInputChanged());
         }
     })
 })
@@ -55,24 +62,25 @@ Array.from(modals.bookOps.querySelectorAll(".form-set .input")).forEach((eachInp
 // Clicking save button should update the real book object to the changed value and also update the table DOM display
 modals.bookOps.querySelector(".save-btn").addEventListener("click", e => {
     e.preventDefault(); // Don't close the dialog upon save. define ourselves
-    
-    let allInputs = modals.bookOps.querySelectorAll(".form-set .input"); 
 
-    allInputs.forEach(each => {
-        let currentField = each.getAttribute("data-input-field");
+    let allInputs = modals.bookOps.querySelectorAll(".form-set .input");
+    let bookOpsForm = modals.bookOps.querySelector("form");
+    let currentField = "";
+
+    if (buffer.book.metadata.state === "existing") {
+        allInputs.forEach(each => {
+            currentField = each.getAttribute("data-input-field");
 
 
-        if (buffer.book.metadata.state === "existing") {
-            
-
+            // Model 
             let bookSelected = buffer.book.instance;
             let rowObj = tableRows.find(row => row.cells.id.textContent === buffer.book.metadata.idSelected);
             let pointedCell = rowObj.cells[currentField];
 
-            
+            // View
             // If there is a change in the input value
             // update the book object
-            if (each.changed) { 
+            if (each.changed) {
                 bookSelected[currentField] = each.value;
             }
 
@@ -81,28 +89,68 @@ modals.bookOps.querySelector(".save-btn").addEventListener("click", e => {
             if (pointedCell) {
                 pointedCell.textContent = each.value;
             }
+
+
+            // Reset the changed variable in the input
+            each.changed = false;
+        })
+
+        modals.func.bookOps.toggleSaveButton(false); // disable the save button
+
+        // Disable all inputs except the cover image
+        modals.func.bookOps.toggleInput(true);
+
+    } else {
+
+        if (modals.func.bookOps.checkValidInputs()) {
+            // Model
+            let get = modals.func.bookOps.getInput;
+            createBook(get("id"), get("title"), get("author"), get("genre"), get("numPages"), get("summary"), get("coverImgURL"));
+            library.at(-1).addEditListenerForNewRow(showBookOpsModal); 
+
+            // View
+            bookOpsForm.submit();
+        }
+        else {
+            bookOpsForm.reportValidity();
         }
 
-        // Reset the changed variable in the input
-        each.changed = false;
-    })
+    }
 
-    e.currentTarget.disabled = true; 
-
-    allInputs.forEach(each => each.disabled = true); 
 })
 
 // For fetching files
-virtualFileInput.addEventListener("change", e => { 
-    const pic = e.target.files[0];
+virtualFileInput.addEventListener("change", e => {
+    const pics = e.target.files;
+    let pic = pics[0];   
     if (pic) {
         reader.readAsDataURL(pic);
         modals.bookOps.querySelector(".save-btn").disabled = false;
     }
+
 });
 
 // For reading photos and update it as background cover photo 
-reader.addEventListener("load", e => updateCoverPhoto(e.target.result, buffer.book.metadata));
+reader.addEventListener("load", e => {
+    // Model
+    // Set to buffer first
+    buffer.book.metadata.coverImgURL = e.target.result;
+
+    // View
+    modals.func.bookOps.setCoverImage(e.target.result);
+
+    if (buffer.book.instance && e.target.result !== buffer.book.instance.coverImgURL) {
+        modals.bookOps.querySelector("#book-cover").changed = true;
+    }
+
+    if (buffer.book.metadata.state === "existing") {
+        // Check for whether any of the inputs have been changed and enable/disable save button
+        modals.func.bookOps.toggleSaveButton(modals.func.bookOps.checkInputChanged());
+    }
+
+    virtualFileInput.value = null;  
+
+});
 
 // Show the book operation dialog
 function showBookOpsModal(evt) {
@@ -111,27 +159,22 @@ function showBookOpsModal(evt) {
 
     // If it is existing book, we want to disable the input
     if (buffer.book.metadata.state === "existing") {
+
+        // Model
         buffer.book.metadata.idSelected = getParent(evt.currentTarget, "tr").getAttribute("data-book-id");
-
-
-        buffer.book.instance = library.find(bk => buffer.book.metadata.idSelected === bk.id); 
+        buffer.book.instance = library.find(bk => buffer.book.metadata.idSelected === bk.id);
 
         let book = buffer.book.instance;
 
+        // View
+
         // Disabling all inputs and save button
-        modals.bookOps.querySelectorAll(".form-set").forEach(eachSet => {
-            eachSet.querySelector(".input").disabled = true;
-
-            let starRequired = eachSet.querySelector(".aria-required");
-            if (starRequired) {
-                starRequired.style.display = "none";
-            }
-        })
-
+        modals.func.bookOps.toggleInput(true);
         modals.bookOps.querySelector(".save-btn").disabled = true;
+        modals.bookOps.querySelector(".save-btn").textContent = "Save";
 
-        // then we want to populate the input with existing data
-        modals.bookOps.querySelector("#book-cover").style.backgroundImage = book.coverImgURL ? `url(${book.coverImgURL})` : "none";
+        // then we want to update DOM by populating the input with existing data
+        modals.func.bookOps.setCoverImage(book.coverImgURL);
         modals.bookOps.querySelector("#book-id").value = book.id;
         modals.bookOps.querySelector("#book-title").value = book.title;
         modals.bookOps.querySelector("#book-author").value = book.author;
@@ -141,13 +184,19 @@ function showBookOpsModal(evt) {
         modals.bookOps.querySelector("#book-summary").value = book.summary;
     }
 
+    else {
+        // Model
+
+        buffer.book.metadata.idSelected = generateBookID();
+
+        // View
+        modals.bookOps.querySelector("#book-id").value = buffer.book.metadata.idSelected;
+        modals.bookOps.querySelector("#book-id").disabled = true;
+
+        modals.bookOps.querySelector(".save-btn").textContent = "Create New";
+        modals.func.bookOps.toggleEditIcon(true);
+    }
+
     modals.bookOps.showModal();
 };
 
-
-
-
-function updateCoverPhoto(rawPicData, bookObj) {
-    bookObj.coverImgURL = rawPicData;
-    modals.bookOps.querySelector("#book-cover").style.backgroundImage = `url(${rawPicData})`;
-}

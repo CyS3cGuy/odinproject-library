@@ -28,3 +28,10 @@ function createFileInput() {
     
     return fileInput;
 }
+
+function generateBookID() {
+    let allIDs = library.map(book => +book.id);
+    let max = Math.max(...allIDs);
+
+    return (max + 1).toString().padStart(BOOKID_LENGTH, "0"); 
+}
