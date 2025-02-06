@@ -30,8 +30,10 @@ function createFileInput() {
 }
 
 function generateBookID() {
-    let allIDs = library.map(book => +book.id);
-    let max = Math.max(...allIDs);
+    let allIDs = library.map(book => +book.id); 
+
+    // Possibility that there is no book at all at first place, so has to generate a random number at start
+    let max = allIDs.length !== 0? Math.max(...allIDs) : random(1, 199999);
 
     return (max + 1).toString().padStart(BOOKID_LENGTH, "0"); 
 }
