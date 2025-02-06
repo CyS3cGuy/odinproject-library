@@ -55,7 +55,7 @@ for (letter of "ABCDEFGHIJ") {
 
 // Create initial books 
 for (let i = 0; i < 7; i++) {
-    let bookID = random(1, 999999).toString().padStart(BOOKID_LENGTH, "0");
+    let bookID = random(1, 499999).toString().padStart(BOOKID_LENGTH, "0");
     let bookTitle = "Book " + i.toString().padStart(3, "0");
     let bookAuthor = "Author " + i.toString().padStart(3, "0");
     let bookGenre = random(0, 1) === 0 ? "" : ["Thriller", "Romance", "Mystery", "Novel", "Kid"][random(0, 4)];
