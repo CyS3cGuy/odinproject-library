@@ -12,6 +12,15 @@ tableLibrary.querySelectorAll(".icon.edit").forEach(eachEditIcon => {
     // View
 })
 
+tableLibrary.querySelectorAll(".icon.delete").forEach(eachDeleteIcon => {
+    // Model
+    eachDeleteIcon.addEventListener("click", deleteBook);
+
+    // View
+    eachDeleteIcon.addEventListener("click", deleteBookTableRow);
+})
+
+
 addBookBtn.addEventListener("click", e => {
     let btn = e.currentTarget;
     btn.bookState = "new";
@@ -200,3 +209,25 @@ function showBookOpsModal(evt) {
     modals.bookOps.showModal();
 };
 
+
+function deleteBook(evt) {
+    let btnIcon = evt.currentTarget;
+    let associatedTableRow = getParent(btnIcon, "tr");
+    let id = associatedTableRow.getAttribute("data-book-id");
+
+    let associatedLibraryIndex = library.findIndex(book => book.id === id);
+    btnIcon.parentIndex = associatedLibraryIndex; 
+
+    // Remove from library model
+    library.splice(associatedLibraryIndex, 1); 
+}
+
+function deleteBookTableRow(evt) {
+    let btnIcon = evt.currentTarget;
+    
+    // remove from DOM
+    tableRows[btnIcon.parentIndex].element.remove(); 
+
+    // remove from the backend DOM array 
+    tableRows.splice(btnIcon.parentIndex, 1); 
+}
