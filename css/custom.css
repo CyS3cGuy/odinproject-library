@@ -40,3 +40,26 @@ dialog {
 #book-cover {
     background-size: cover;   
 }
+
+
+#borrow-operate {
+    & form {
+        .user-status-selection:disabled {
+            ~ .hide-upon-borrowed {
+                display: none;   
+            }
+        }
+
+        .user-status-selection:not([disabled]):has(#rd-existing:checked) {
+            ~ .hide-existing {
+                display: none; 
+            }
+        }
+
+        .user-status-selection:not([disabled]):has(#rd-new:checked) {
+            ~ .hide-new {
+                display: none;  
+            }
+        }
+    }
+}

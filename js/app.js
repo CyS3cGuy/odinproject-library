@@ -20,6 +20,53 @@ tableLibrary.querySelectorAll(".icon.delete").forEach(eachDeleteIcon => {
     eachDeleteIcon.addEventListener("click", deleteBookTableRow);
 })
 
+tableLibrary.querySelectorAll(".icon.borrow").forEach(eachBorrowIcon => {
+    // Model
+    eachBorrowIcon.addEventListener("click", operateBorrowOpsModel);
+
+    // View
+    eachBorrowIcon.addEventListener("click", showBorrowOpsModal); 
+})
+
+function operateBorrowOpsModel(evt) {
+    let id = getParent(evt.currentTarget, "tr").getAttribute("data-book-id");
+    let bookInstance = library.find(book => book.id === id);
+    buffer.book.borrow.metadata.idSelected = id;
+    buffer.book.borrow.instance = bookInstance;
+    buffer.user.instance = bookInstance.borrower; 
+}
+
+function showBorrowOpsModal(evt) {
+    let borrower = buffer.book.borrow.instance.borrower; 
+    let isBorrowed = borrower !== null && borrower !== "";  
+    
+    modals.func.borrowOps.updateBookTitle(buffer.book.borrow.instance.title); 
+    modals.func.borrowOps.showBorrowStatus(buffer.book.borrow.instance.computeBorrowStatus());
+
+    if (isBorrowed) {
+        modals.borrowOps.querySelector(".user-status-selection").disabled = true; 
+        modals.func.borrowOps.toggleInputsUponBorrowed(true);
+        
+    }
+    else {
+        if (modals.borrowOps.querySelector("#rd-existing").checked) {
+            modals.func.borrowOps.toggleInputsForExistingUser(true);
+        } 
+        else if (modals.borrowOps.querySelector("#rd-new").checked) {
+            modals.func.borrowOps.toggleInputsForNewUser(true);
+        }
+    }
+    
+    modals.borrowOps.showModal();  
+}
+
+modals.borrowOps.querySelector("#rd-existing").addEventListener("click", () => {
+    modals.func.borrowOps.toggleInputsForExistingUser(true);
+})
+
+modals.borrowOps.querySelector("#rd-new").addEventListener("click", () => {
+    modals.func.borrowOps.toggleInputsForNewUser(true);
+})
 
 addBookBtn.addEventListener("click", e => {
     let btn = e.currentTarget;
@@ -115,7 +162,7 @@ modals.bookOps.querySelector(".save-btn").addEventListener("click", e => {
             // Model
             let get = modals.func.bookOps.getInput;
             createBook(get("id"), get("title"), get("author"), get("genre"), get("numPages"), get("summary"), get("coverImgURL"));
-            library.at(-1).addEditListenerForNewRow(showBookOpsModal); 
+            library.at(-1).addEditListenerForNewRow(showBookOpsModal);
 
             // View
             bookOpsForm.submit();
@@ -131,7 +178,7 @@ modals.bookOps.querySelector(".save-btn").addEventListener("click", e => {
 // For fetching files
 virtualFileInput.addEventListener("change", e => {
     const pics = e.target.files;
-    let pic = pics[0];   
+    let pic = pics[0];
     if (pic) {
         reader.readAsDataURL(pic);
         modals.bookOps.querySelector(".save-btn").disabled = false;
@@ -157,7 +204,7 @@ reader.addEventListener("load", e => {
         modals.func.bookOps.toggleSaveButton(modals.func.bookOps.checkInputChanged());
     }
 
-    virtualFileInput.value = null;  
+    virtualFileInput.value = null;
 
 });
 
@@ -216,18 +263,18 @@ function deleteBook(evt) {
     let id = associatedTableRow.getAttribute("data-book-id");
 
     let associatedLibraryIndex = library.findIndex(book => book.id === id);
-    btnIcon.parentIndex = associatedLibraryIndex; 
+    btnIcon.parentIndex = associatedLibraryIndex;
 
     // Remove from library model
-    library.splice(associatedLibraryIndex, 1); 
+    library.splice(associatedLibraryIndex, 1);
 }
 
 function deleteBookTableRow(evt) {
     let btnIcon = evt.currentTarget;
-    
+
     // remove from DOM
-    tableRows[btnIcon.parentIndex].element.remove(); 
+    tableRows[btnIcon.parentIndex].element.remove();
 
     // remove from the backend DOM array 
-    tableRows.splice(btnIcon.parentIndex, 1); 
+    tableRows.splice(btnIcon.parentIndex, 1);
 }

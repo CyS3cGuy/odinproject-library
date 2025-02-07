@@ -6,6 +6,7 @@ const users = [];
 const buffer = {
     book: {
         instance: null,
+        
         metadata: {
             idSelected: null,
             state: null,
@@ -31,10 +32,21 @@ const buffer = {
                 this.metadata.coverImgURL = null;
             }
         },
+
+        borrow: {
+            instance: null,
+
+            metadata: {
+                idSelected: null,
+            }
+        }
     },
 
     user: {
         instance: null,
+        metadata: {
+
+        }
     },
 }
 
@@ -53,8 +65,11 @@ for (letter of "ABCDEFGHIJ") {
 
 }
 
+// Create a predictable user
+createUser("0000", "Adrian", "Eu"); 
+
 // Create initial books 
-for (let i = 0; i < 7; i++) {
+for (let i = 0; i < 2; i++) { 
     let bookID = random(1, 499999).toString().padStart(BOOKID_LENGTH, "0");
     let bookTitle = "Book " + i.toString().padStart(3, "0");
     let bookAuthor = "Author " + i.toString().padStart(3, "0");
@@ -133,6 +148,44 @@ const modals = {
             },
         },
         borrowOps: {
+            toggleInputsUponBorrowed: function (disable) {
+                modals.borrowOps.querySelectorAll("input").forEach(each => each.disabled = false);
+                modals.borrowOps.querySelectorAll(".disable-upon-borrowed").forEach(each => each.querySelector("input").disabled = disable); 
+            },
+
+            toggleInputsForNewUser: function (disable) {
+                modals.borrowOps.querySelectorAll("input").forEach(each => each.disabled = false);
+                modals.borrowOps.querySelectorAll(".disable-new").forEach(each => each.querySelector("input").disabled = disable); 
+            },
+
+            toggleInputsForExistingUser: function (disable) {
+                modals.borrowOps.querySelectorAll("input").forEach(each => each.disabled = false);
+                modals.borrowOps.querySelectorAll(".disable-existing").forEach(each => each.querySelector("input").disabled = disable);
+                modals.borrowOps.querySelector(".disable-existing-btn").disabled = disable;   
+            },
+
+            showBorrowStatus: function (borrowStatus) {
+                const borrowStatusLabel = modals.borrowOps.querySelector("#user-borrow-status");
+                const nextActionLabel = modals.borrowOps.querySelector("#user-available-action");
+                borrowStatusLabel.textContent = borrowStatus; 
+
+                if (borrowStatus === "Available" ) { 
+                    borrowStatusLabel.classList.add("borrow-available");
+                    nextActionLabel.textContent = "Borrowed"; 
+                }
+                else if (borrowStatus.includes("Almost Overdue")) {
+                    borrowStatusLabel.classList.add("borrow-almost-overdue");
+                    nextActionLabel.textContent = "Returned"; 
+                } 
+                else {
+                    borrowStatusLabel.classList.add("borrow-overdue"); 
+                    nextActionLabel.textContent = "Returned";  
+                }
+            },
+
+            updateBookTitle: function (title) {
+                modals.borrowOps.querySelector(".selected-book").textContent = title; 
+            }
 
         },
         confirmOps: {

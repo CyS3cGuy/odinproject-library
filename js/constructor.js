@@ -1,5 +1,13 @@
 const tableRows = []; 
 
+const RETURN_ALERT = 4;  
+const TODAY_YEAR = 2025;
+const TODAY_MONTH = 5;
+const TODAY_DAY = 13; 
+const today = new Date(TODAY_YEAR, TODAY_MONTH, TODAY_DAY); 
+
+document.querySelector("#header-date").textContent = DateOps.parseDate(today.getFullYear(), today.getMonth(), today.getDate());       
+
 // About books
 
 function Book(id, title, author, genre, numPages, summary, coverImgURL) {
@@ -11,9 +19,11 @@ function Book(id, title, author, genre, numPages, summary, coverImgURL) {
     this.summary = summary ? summary : "";
     this.coverImgURL = coverImgURL ? coverImgURL : "";
 
-    this.borrower = "";
+    this.borrower = null; 
     this.borrowDate = "";
-    this.returnDate = "";
+    this.expectedReturnDate = ""; 
+    this.actualReturnDate = "";
+    this.borrowHistory = []; 
 }
   
 // About Users
@@ -23,6 +33,7 @@ function User(memberid, firstName, lastName) {
     this.lastName = lastName ? lastName : null;
 
     this.borrowedBooks = [];
+    this.borrowHistory = []; 
 }
 
 function createBook(id, title, author, genre, numPages, summary, coverImgURL) {
@@ -120,4 +131,12 @@ Book.prototype.createTableRow = function () {
 Book.prototype.addEditListenerForNewRow = function (listenerCallBack) {
     tableRows.at(-1).clickables.edit.wrapper.bookState = "existing";   
     tableRows.at(-1).clickables.edit.wrapper.addEventListener("click", listenerCallBack);
+}
+
+Book.prototype.computeBorrowStatus = function () {
+    let isBorrowed = this.borrower !== null && this.borrower !== "";  
+
+    if (!isBorrowed) {return "Available";}
+        
+    return today > this.expectedReturnDate? "Not Available (Overdue)" : DateOps.diffDays(today, this.expectedReturnDate) < RETURN_ALERT? "Not Available (Almost Overdue)" : "Not Available (Borrowed)";
 }
