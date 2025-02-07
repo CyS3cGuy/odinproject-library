@@ -28,44 +28,32 @@ tableLibrary.querySelectorAll(".icon.borrow").forEach(eachBorrowIcon => {
     eachBorrowIcon.addEventListener("click", showBorrowOpsModal); 
 })
 
-function operateBorrowOpsModel(evt) {
-    let id = getParent(evt.currentTarget, "tr").getAttribute("data-book-id");
-    let bookInstance = library.find(book => book.id === id);
-    buffer.book.borrow.metadata.idSelected = id;
-    buffer.book.borrow.instance = bookInstance;
-    buffer.user.instance = bookInstance.borrower; 
-}
-
-function showBorrowOpsModal(evt) {
-    let borrower = buffer.book.borrow.instance.borrower; 
-    let isBorrowed = borrower !== null && borrower !== "";  
-    
-    modals.func.borrowOps.updateBookTitle(buffer.book.borrow.instance.title); 
-    modals.func.borrowOps.showBorrowStatus(buffer.book.borrow.instance.computeBorrowStatus());
-
-    if (isBorrowed) {
-        modals.borrowOps.querySelector(".user-status-selection").disabled = true; 
-        modals.func.borrowOps.toggleInputsUponBorrowed(true);
-        
-    }
-    else {
-        if (modals.borrowOps.querySelector("#rd-existing").checked) {
-            modals.func.borrowOps.toggleInputsForExistingUser(true);
-        } 
-        else if (modals.borrowOps.querySelector("#rd-new").checked) {
-            modals.func.borrowOps.toggleInputsForNewUser(true);
-        }
-    }
-    
-    modals.borrowOps.showModal();  
-}
-
 modals.borrowOps.querySelector("#rd-existing").addEventListener("click", () => {
-    modals.func.borrowOps.toggleInputsForExistingUser(true);
+    modals.func.borrowOps.disableInputsForExistingUser(true);
 })
 
 modals.borrowOps.querySelector("#rd-new").addEventListener("click", () => {
-    modals.func.borrowOps.toggleInputsForNewUser(true);
+    modals.func.borrowOps.disableInputsForNewUser(true);
+})
+
+modals.borrowOps.querySelector("#user-member-id").addEventListener("keydown", evt => {
+    const query = evt.currentTarget.value;
+    
+    if (evt.key === "Enter") {
+        // Model
+        buffer.user.instance = buffer.user.func.findUser(query)? buffer.user.func.findUser(query) : null;  
+
+        // View
+        if (buffer.user.instance) {
+            modals.func.borrowOps.updateName(buffer.user.instance); 
+            modals.func.borrowOps.hideInputsVisibilityForExistingUser(false); 
+        }
+        else {
+            modals.func.borrowOps.updateName(null);
+            modals.func.borrowOps.hideInputsVisibilityForExistingUser(true); 
+        }
+        
+    }
 })
 
 addBookBtn.addEventListener("click", e => {
@@ -277,4 +265,36 @@ function deleteBookTableRow(evt) {
 
     // remove from the backend DOM array 
     tableRows.splice(btnIcon.parentIndex, 1);
+}
+
+function operateBorrowOpsModel(evt) {
+    let id = getParent(evt.currentTarget, "tr").getAttribute("data-book-id");
+    let bookInstance = library.find(book => book.id === id);
+    buffer.book.borrow.metadata.idSelected = id;
+    buffer.book.borrow.instance = bookInstance;
+    buffer.user.instance = bookInstance.borrower; 
+}
+
+function showBorrowOpsModal(evt) {
+    let borrower = buffer.book.borrow.instance.borrower; 
+    let isBorrowed = borrower !== null && borrower !== "";  
+    
+    modals.func.borrowOps.updateBookTitle(buffer.book.borrow.instance.title); 
+    modals.func.borrowOps.showBorrowStatus(buffer.book.borrow.instance.computeBorrowStatus());
+
+    if (isBorrowed) {
+        modals.borrowOps.querySelector(".user-status-selection").disabled = true; 
+        modals.func.borrowOps.disableInputsUponBorrowed(true);
+        
+    }
+    else {
+        if (modals.borrowOps.querySelector("#rd-existing").checked) {
+            modals.func.borrowOps.disableInputsForExistingUser(true);
+        } 
+        else if (modals.borrowOps.querySelector("#rd-new").checked) {
+            modals.func.borrowOps.disableInputsForNewUser(true);
+        }
+    }
+    
+    modals.borrowOps.showModal();  
 }

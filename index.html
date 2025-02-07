@@ -151,14 +151,15 @@
                 <div class="form-set hide-upon-borrowed hide-new">
                     <label for="user-member-id">Member ID</label>
                     <input type="search" name="user-member-id" id="user-member-id" placeholder="Search Member ID">  
+                    <span id="user-not-found" class="hide">ERROR: No user found</span>
                 </div>
 
-                <div class="form-set disable-upon-borrowed hide-existing">
+                <div class="form-set disable-upon-borrowed disable-existing hide-existing">
                     <label for="user-first-name">First Name</label>
                     <input type="text" name="user-first-name" id="user-first-name" required> 
                 </div>
 
-                <div class="form-set disable-upon-borrowed hide-existing">
+                <div class="form-set disable-upon-borrowed disable-existing hide-existing">
                     <label for="user-last-name">Last Name</label>
                     <input type="text" name="user-last-name" id="user-last-name" required> 
                 </div>
@@ -219,8 +220,8 @@
                     </table>
                 </div>
 
-                <button class="borrow-btn hide-upon-borrowed disable-existing-btn">Borrow Book</button>
-                <button class="return-btn hide-existing hide-new">Return Book</button>
+                <button class="borrow-btn hide-upon-borrowed-btn disable-existing-btn">Borrow Book</button>
+                <button class="return-btn hide-existing-btn hide-new-btn">Return Book</button>
                 <button class="cancel" formnovalidate>Cancel</button>   
             </form>
         </dialog>

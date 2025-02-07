@@ -6,7 +6,7 @@ const users = [];
 const buffer = {
     book: {
         instance: null,
-        
+
         metadata: {
             idSelected: null,
             state: null,
@@ -46,6 +46,12 @@ const buffer = {
         instance: null,
         metadata: {
 
+        },
+
+        func: {
+            findUser: function (memberid) {
+                return users.find(user => user.memberid === memberid);
+            }
         }
     },
 }
@@ -66,10 +72,10 @@ for (letter of "ABCDEFGHIJ") {
 }
 
 // Create a predictable user
-createUser("0000", "Adrian", "Eu"); 
+createUser("0000", "Adrian", "Eu");
 
 // Create initial books 
-for (let i = 0; i < 2; i++) { 
+for (let i = 0; i < 2; i++) {
     let bookID = random(1, 499999).toString().padStart(BOOKID_LENGTH, "0");
     let bookTitle = "Book " + i.toString().padStart(3, "0");
     let bookAuthor = "Author " + i.toString().padStart(3, "0");
@@ -87,20 +93,20 @@ const modals = {
     confirmOps: Array.from(document.querySelectorAll("dialog"))[2],
     func: {
         bookOps: {
-            getInput: function(fieldName) {
-                return Array.from(modals.bookOps.querySelectorAll(".form-set .input")).find(eachInput => eachInput.getAttribute("data-input-field") === fieldName).value;  
+            getInput: function (fieldName) {
+                return Array.from(modals.bookOps.querySelectorAll(".form-set .input")).find(eachInput => eachInput.getAttribute("data-input-field") === fieldName).value;
             },
-            
-            resetInputVal: function () { 
+
+            resetInputVal: function () {
                 modals.bookOps.querySelectorAll(".form-set .input").forEach(eachInput => {
                     eachInput.value = "";
-                    eachInput.changed = false; 
+                    eachInput.changed = false;
                 });
                 modals.func.bookOps.setCoverImage(null);
             },
 
-            checkValidInputs: function() {
-                let isValid = true; 
+            checkValidInputs: function () {
+                let isValid = true;
                 modals.bookOps.querySelectorAll(".form-set .input").forEach(eachInput => {
 
                     if (eachInput.validity) {
@@ -108,31 +114,31 @@ const modals = {
                     }
                 });
 
-                return isValid; 
+                return isValid;
             },
 
             toggleInput: function (disable) {
                 modals.bookOps.querySelectorAll(".form-set .input").forEach(eachInput => {
                     eachInput.disabled = disable;
-                    
+
                     let starRequired = eachInput.parentElement.querySelector(".aria-required");
 
                     if (starRequired) {
-                        starRequired.style.display = disable? "none" : "inline-block"; 
+                        starRequired.style.display = disable ? "none" : "inline-block";
                     }
                 });
             },
 
             toggleSaveButton: function (inputChanged) {
-                modals.bookOps.querySelector(".save-btn").disabled = inputChanged? false : true; 
+                modals.bookOps.querySelector(".save-btn").disabled = inputChanged ? false : true;
             },
 
-            checkInputChanged: function() {
+            checkInputChanged: function () {
                 let overallChangeStatus = false;
                 modals.bookOps.querySelectorAll(".input").forEach(eachInput => {
                     overallChangeStatus = overallChangeStatus || eachInput.changed;
                 })
-                
+
                 return overallChangeStatus;
             },
 
@@ -141,50 +147,81 @@ const modals = {
                 modals.bookOps.querySelector("#book-cover").value = picURL || picURL !== "" ? picURL : ""; // set this value (even though not affecting the UI display for use later)
             },
 
-            toggleEditIcon: function(disable) {
+            toggleEditIcon: function (disable) {
                 modals.bookOps.querySelectorAll(".form-set .edit").forEach(eachEdit => {
-                    eachEdit.style.display = disable? "none" : "block"; 
+                    eachEdit.style.display = disable ? "none" : "block";
                 })
             },
         },
         borrowOps: {
-            toggleInputsUponBorrowed: function (disable) {
+            disableInputsUponBorrowed: function (disable) {
                 modals.borrowOps.querySelectorAll("input").forEach(each => each.disabled = false);
-                modals.borrowOps.querySelectorAll(".disable-upon-borrowed").forEach(each => each.querySelector("input").disabled = disable); 
+                modals.borrowOps.querySelectorAll(".disable-upon-borrowed").forEach(each => each.querySelector("input").disabled = disable);
             },
 
-            toggleInputsForNewUser: function (disable) {
+            disableInputsForNewUser: function (disable) {
                 modals.borrowOps.querySelectorAll("input").forEach(each => each.disabled = false);
-                modals.borrowOps.querySelectorAll(".disable-new").forEach(each => each.querySelector("input").disabled = disable); 
+                modals.borrowOps.querySelectorAll(".disable-new").forEach(each => each.querySelector("input").disabled = disable);
             },
 
-            toggleInputsForExistingUser: function (disable) {
+            disableInputsForExistingUser: function (disable) {
                 modals.borrowOps.querySelectorAll("input").forEach(each => each.disabled = false);
                 modals.borrowOps.querySelectorAll(".disable-existing").forEach(each => each.querySelector("input").disabled = disable);
-                modals.borrowOps.querySelector(".disable-existing-btn").disabled = disable;   
+                modals.borrowOps.querySelector(".disable-existing-btn").disabled = disable;
+            },
+
+            hideInputsVisibilityForExistingUser: function (hide) {
+                modals.borrowOps.querySelectorAll(".show-existing").forEach(each => {
+                    if (hide) {
+                        each.classList.remove("show-existing");
+                        each.classList.add("hide-existing"); 
+                        
+                    }
+                })
+
+                modals.borrowOps.querySelectorAll(".hide-existing").forEach(each => {
+                    if (!hide) {
+                        each.classList.remove("hide-existing");
+                        each.classList.add("show-existing"); 
+                        
+                    }
+                })
             },
 
             showBorrowStatus: function (borrowStatus) {
                 const borrowStatusLabel = modals.borrowOps.querySelector("#user-borrow-status");
                 const nextActionLabel = modals.borrowOps.querySelector("#user-available-action");
-                borrowStatusLabel.textContent = borrowStatus; 
+                borrowStatusLabel.textContent = borrowStatus;
 
-                if (borrowStatus === "Available" ) { 
+                if (borrowStatus === "Available") {
                     borrowStatusLabel.classList.add("borrow-available");
-                    nextActionLabel.textContent = "Borrowed"; 
+                    nextActionLabel.textContent = "Borrowed";
                 }
                 else if (borrowStatus.includes("Almost Overdue")) {
                     borrowStatusLabel.classList.add("borrow-almost-overdue");
-                    nextActionLabel.textContent = "Returned"; 
-                } 
+                    nextActionLabel.textContent = "Returned";
+                }
                 else {
-                    borrowStatusLabel.classList.add("borrow-overdue"); 
-                    nextActionLabel.textContent = "Returned";  
+                    borrowStatusLabel.classList.add("borrow-overdue");
+                    nextActionLabel.textContent = "Returned";
                 }
             },
 
             updateBookTitle: function (title) {
-                modals.borrowOps.querySelector(".selected-book").textContent = title; 
+                modals.borrowOps.querySelector(".selected-book").textContent = title;
+            },
+
+            updateName: function (user) {
+                modals.borrowOps.querySelector("#user-first-name").value = user && user !== ""? user.firstName : "";
+                modals.borrowOps.querySelector("#user-last-name").value = user && user !== ""? user.lastName : "";
+
+                if (user && user !== "") {
+                    modals.borrowOps.querySelector("#user-not-found").classList.add("hide");
+                }
+                else {
+                    modals.borrowOps.querySelector("#user-not-found").classList.remove("hide"); 
+                }
+                
             }
 
         },

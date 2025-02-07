@@ -1,65 +1,75 @@
 table {
 
-    width: 100%;  
-} 
+    width: 100%;
+}
 
 dialog {
-    width: 70%;  
-    position: absolute;  
-    top: 0;   
+    width: 70%;
+    position: absolute;
+    top: 0;
 }
 
 .flex-center {
     display: flex;
     justify-content: center;
-    align-items: center; 
+    align-items: center;
 }
 
 .img-box {
-    
-    width: 40%;  
+
+    width: 40%;
     aspect-ratio: 1;
-    background-color: transparent;  
-    transition: 100ms;  
-    
-    
+    background-color: transparent;
+    transition: 100ms;
+
+
+}
+
+.hide {
+    display: none; 
 }
 
 .icon {
-    cursor: pointer; 
+    cursor: pointer;
 }
 
 .icon:hover {
-    background-color: rgb(0,0,0,0.2);  
+    background-color: rgb(0, 0, 0, 0.2);
 }
 
 .img-box:hover {
-    background-color: rgb(0,0,0,0.5); 
+    background-color: rgb(0, 0, 0, 0.5);
 }
 
 #book-cover {
-    background-size: cover;   
+    background-size: cover;
 }
 
 
 #borrow-operate {
     & form {
         .user-status-selection:disabled {
-            ~ .hide-upon-borrowed {
-                display: none;   
+
+            ~.hide-upon-borrowed,
+            ~.hide-upon-borrowed-btn {
+                display: none;
             }
         }
 
         .user-status-selection:not([disabled]):has(#rd-existing:checked) {
-            ~ .hide-existing {
-                display: none; 
+
+            ~.hide-existing,
+            ~.hide-existing-btn {
+                display: none;
             }
         }
 
         .user-status-selection:not([disabled]):has(#rd-new:checked) {
-            ~ .hide-new {
-                display: none;  
+
+            ~.hide-new,
+            ~.hide-new-btn {
+                display: none;
             }
         }
     }
-}
+} 
