@@ -235,7 +235,7 @@ const modals = {
                 let hasAllFilled = true;
                 modals.borrowOps.querySelectorAll(inputSelector).forEach(each => {
                     hasAllFilled = hasAllFilled && each.value !== "";
-                    
+                   
                 })
 
                 modals.borrowOps.querySelector(btnSelector).disabled = hasAllFilled? false : true;   
@@ -249,6 +249,33 @@ const modals = {
                     modals.borrowOps.querySelector("#user-not-found").classList.add("hide");
                 });
             },
+
+            validateReturnDate: function(isExpectedReturn) {
+                const borrowDateDOM = modals.borrowOps.querySelector("#user-borrow-date");
+                const expectedReturnDOM = modals.borrowOps.querySelector("#user-expected-return-date");
+                const returnDOM = modals.borrowOps.querySelector("#user-return-date");
+
+                let borrowDate = new Date(borrowDateDOM.value);
+
+                let returnDate = isExpectedReturn? new Date(expectedReturnDOM.value) : new Date(returnDOM.value); 
+                console.log(borrowDate);
+                console.log(returnDate); 
+
+                if (returnDate <= borrowDate) {
+                    if (isExpectedReturn) {
+                        expectedReturnDOM.setCustomValidity("Expected return date must be greater than borrow date.");
+                    } else {
+                        returnDOM.setCustomValidity("Return date must be greater than borrow date.");
+                    }
+                } else {
+                    // ✅ Properly clear the validation message
+                    if (isExpectedReturn) {
+                        expectedReturnDOM.setCustomValidity("");
+                    } else {
+                        returnDOM.setCustomValidity("");
+                    } 
+                }
+            }
 
         },
         confirmOps: {

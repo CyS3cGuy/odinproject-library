@@ -61,10 +61,23 @@ modals.borrowOps.querySelector("#user-member-id").addEventListener("keydown", ev
 })
 
 modals.borrowOps.querySelectorAll(".for-borrow").forEach(each => {
-    each.querySelector("input").addEventListener("input", e => {
+    each.querySelector("input").addEventListener("input", e => {    
         modals.func.borrowOps.checkBtnEnableCriteria("borrow");
     })
 })
+
+// Adding custom validation for return date
+modals.borrowOps.querySelector("#user-expected-return-date").addEventListener("input", () => modals.func.borrowOps.validateReturnDate(true));
+modals.borrowOps.querySelector("#user-return-date").addEventListener("input", () => modals.func.borrowOps.validateReturnDate(false)); 
+
+modals.borrowOps.querySelector("#borrow-form").addEventListener("submit", evt => {   
+    if (!evt.currentTarget.checkValidity()) {
+        evt.preventDefault() // Prevent submission if validation fails
+    } else {
+        evt.currentTarget.submit();
+    }
+})
+
 
 addBookBtn.addEventListener("click", e => {
     let btn = e.currentTarget;
@@ -291,6 +304,7 @@ function showBorrowOpsModal(evt) {
     
     modals.func.borrowOps.updateBookTitle(buffer.book.borrow.instance.title); 
     modals.func.borrowOps.showBorrowStatus(buffer.book.borrow.instance.computeBorrowStatus());
+    
 
     if (isBorrowed) {
         modals.borrowOps.querySelector(".user-status-selection").disabled = true; 
