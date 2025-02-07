@@ -170,6 +170,11 @@ const modals = {
                 modals.borrowOps.querySelector(".disable-existing-btn").disabled = disable;
             },
 
+            makeInputsRequired: function (criteria, isRequired) {
+                let selector = "for-" + criteria + " input";
+                modals.borrowOps.querySelectorAll(selector).forEach(each => each.required = isRequired);
+            },
+
             hideInputsVisibilityForExistingUser: function (hide) {
                 modals.borrowOps.querySelectorAll(".show-existing-temp").forEach(each => {
                     if (hide) {
@@ -222,11 +227,33 @@ const modals = {
                     modals.borrowOps.querySelector("#user-not-found").classList.remove("hide"); 
                 }
                 
-            }
+            },
+
+            checkBtnEnableCriteria: function(criteria) {
+                let btnSelector = "." + criteria + "-btn";
+                let inputSelector = ".for-" + criteria + " input";
+                let hasAllFilled = true;
+                modals.borrowOps.querySelectorAll(inputSelector).forEach(each => {
+                    hasAllFilled = hasAllFilled && each.value !== "";
+                    
+                })
+
+                modals.borrowOps.querySelector(btnSelector).disabled = hasAllFilled? false : true;   
+            },
+
+            resetAllInputsVal: function() {
+                
+                modals.borrowOps.querySelectorAll("input").forEach(each => {
+                    each.value = "";
+                    each.dispatchEvent(new Event("input")); // Ensure the event is fired so that the listener at app.js can operate, like disabling the button
+                    modals.borrowOps.querySelector("#user-not-found").classList.add("hide");
+                });
+            },
 
         },
         confirmOps: {
 
         }
     },
+    
 };

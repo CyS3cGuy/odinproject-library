@@ -154,29 +154,29 @@
                     <span id="user-not-found" class="hide">ERROR: No user found</span>
                 </div>
 
-                <div class="form-set disable-upon-borrowed disable-existing hide-existing-temp">
+                <div class="form-set disable-upon-borrowed disable-existing hide-existing-temp for-borrow">
                     <label for="user-first-name">First Name</label>
                     <input type="text" name="user-first-name" id="user-first-name" required> 
                 </div>
 
-                <div class="form-set disable-upon-borrowed disable-existing hide-existing-temp">
+                <div class="form-set disable-upon-borrowed disable-existing hide-existing-temp for-borrow">
                     <label for="user-last-name">Last Name</label>
                     <input type="text" name="user-last-name" id="user-last-name" required> 
                 </div>
 
-                <div class="form-set disable-upon-borrowed hide-existing-temp">
+                <div class="form-set disable-upon-borrowed hide-existing-temp for-borrow">
                     <label for="user-borrow-date">Borrow Date</label>
                     <input type="date" name="user-borrow-date" id="user-borrow-date" required> 
                 </div>
 
-                <div class="form-set disable-upon-borrowed hide-existing-temp">
+                <div class="form-set disable-upon-borrowed hide-existing-temp for-borrow">
                     <label for="user-expected-return-date">Expected Return Date</label>
                     <input type="date" name="user-expected-return-date" id="user-expected-return-date" required> 
                 </div>
 
-                <div class="form-set hide-new hide-existing">
+                <div class="form-set hide-new hide-existing for-return">
                     <label for="user-actual-return-date">Actual Return Date</label>
-                    <input type="date" name="user-return-date" id="user-return-date" required> 
+                    <input type="date" name="user-return-date" id="user-return-date"> 
                 </div>
 
                 
@@ -230,6 +230,7 @@
         </dialog>
  
         <footer id="footer">&copy; 2025 All Righs Reserved by CyS3cGuy</footer>
+
     </div>
 
     <script src="./js/utility.js"></script>  

@@ -29,11 +29,15 @@ tableLibrary.querySelectorAll(".icon.borrow").forEach(eachBorrowIcon => {
 })
 
 modals.borrowOps.querySelector("#rd-existing").addEventListener("click", () => {
+    // View
     modals.func.borrowOps.disableInputsForExistingUser(true);
+    modals.func.borrowOps.resetAllInputsVal();
 })
 
 modals.borrowOps.querySelector("#rd-new").addEventListener("click", () => {
+    // View
     modals.func.borrowOps.disableInputsForNewUser(true);
+    modals.func.borrowOps.resetAllInputsVal();
 })
 
 modals.borrowOps.querySelector("#user-member-id").addEventListener("keydown", evt => {
@@ -54,6 +58,12 @@ modals.borrowOps.querySelector("#user-member-id").addEventListener("keydown", ev
         }
         
     }
+})
+
+modals.borrowOps.querySelectorAll(".for-borrow").forEach(each => {
+    each.querySelector("input").addEventListener("input", e => {
+        modals.func.borrowOps.checkBtnEnableCriteria("borrow");
+    })
 })
 
 addBookBtn.addEventListener("click", e => {
@@ -285,15 +295,14 @@ function showBorrowOpsModal(evt) {
     if (isBorrowed) {
         modals.borrowOps.querySelector(".user-status-selection").disabled = true; 
         modals.func.borrowOps.disableInputsUponBorrowed(true);
+        modals.func.borrowOps.makeInputsRequired("return", true);
+        modals.func.borrowOps.makeInputsRequired("borrow", false);
         
     }
     else {
-        if (modals.borrowOps.querySelector("#rd-existing").checked) {
-            modals.func.borrowOps.disableInputsForExistingUser(true);
-        } 
-        else if (modals.borrowOps.querySelector("#rd-new").checked) {
-            modals.func.borrowOps.disableInputsForNewUser(true);
-        }
+        modals.func.borrowOps.disableInputsForExistingUser(true);
+        modals.func.borrowOps.makeInputsRequired("borrow", true);
+        modals.func.borrowOps.makeInputsRequired("return", false); 
     }
     
     modals.borrowOps.showModal();  
