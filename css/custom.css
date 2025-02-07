@@ -59,6 +59,7 @@ dialog {
         .user-status-selection:not([disabled]):has(#rd-existing:checked) {
 
             ~.hide-existing,
+            ~.hide-existing-temp, 
             ~.hide-existing-btn {
                 display: none;
             }

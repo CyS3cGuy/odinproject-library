@@ -171,18 +171,18 @@ const modals = {
             },
 
             hideInputsVisibilityForExistingUser: function (hide) {
-                modals.borrowOps.querySelectorAll(".show-existing").forEach(each => {
+                modals.borrowOps.querySelectorAll(".show-existing-temp").forEach(each => {
                     if (hide) {
-                        each.classList.remove("show-existing");
-                        each.classList.add("hide-existing"); 
+                        each.classList.remove("show-existing-temp");
+                        each.classList.add("hide-existing-temp"); 
                         
                     }
                 })
 
-                modals.borrowOps.querySelectorAll(".hide-existing").forEach(each => {
+                modals.borrowOps.querySelectorAll(".hide-existing-temp").forEach(each => {
                     if (!hide) {
-                        each.classList.remove("hide-existing");
-                        each.classList.add("show-existing"); 
+                        each.classList.remove("hide-existing-temp");
+                        each.classList.add("show-existing-temp"); 
                         
                     }
                 })
