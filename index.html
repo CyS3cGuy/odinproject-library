@@ -12,7 +12,9 @@
     <div class="main">
         <header id="header">
             <div id="header-title">Simply Library</div>
-            <div id="header-date"></div>
+            <div>
+                Today's Date: <span id="header-date"></span>
+            </div>
         </header>
 
         <div id="content">
@@ -43,24 +45,7 @@
                 </thead>
 
                 <tbody>
-                    <tr>
-                        <td>031234</td> 
-                        <td>Harry Potter</td>
-                        <td>JK Rowling</td>
-                        <td>Alex Mia</td>
-                        <td>25 Dec 2024</td>
-                        <td>3 Jan 2025</td>
-                        <td>5</td>
-                        <td>Available</td>
-                        <td>
-                            <div title="View / Edit Book" class="icon edit"><img src="./images/svg/edit.svg"
-                                    alt="View / Edit Book"></div>
 
-                            <div title="Remove" class="icon delete"><img src="./images/svg/delete.svg" alt="Remove"></div>
-
-                            <div title="Borrow / Return" class="icon borrow"><img src="./images/svg/book.svg" alt="Borrow / Return"></div>
-                        </td>
-                    </tr>
                 </tbody>
             </table>
 
@@ -149,9 +134,9 @@
                 </fieldset>
 
                 <div class="error">
-                    <div id="user-not-found" class="hide">ERROR: No user found.</div>
-                    <div id="user-duplicate" class="hide">ERROR: Member ID already exists.</div>  
-                    <div id="user-not-created" class="hide">ERROR: User cannot be created. User is null.</div>  
+                    <div id="user-not-found" class="hide message">ERROR: No user found.</div>
+                    <div id="user-duplicate" class="hide message">ERROR: Member ID already exists.</div>  
+                    <div id="user-not-created" class="hide message">ERROR: User cannot be created. User is null.</div>  
                 </div>
 
                 <div class="form-set hide-upon-borrowed hide-new disable-new">
@@ -196,7 +181,7 @@
                 <div class="form-set">
                     <h4>Borrow History</h4> 
 
-                    <table>
+                    <table id="book-borrow-history">
                         <thead>
                             <tr>
                                 <th scope="col">Borrower</th>
@@ -233,7 +218,7 @@
             </form>
         </dialog>
 
-        <dialog>
+        <dialog id="confirm-operate">
             <div class="confirmation-msg">Are you sure to proceed?</div>
             <div class="decision-btn">
                 <button class="yes-btn">Yes</button>

@@ -22,10 +22,21 @@ tableLibrary.querySelectorAll(".icon.delete").forEach(eachDeleteIcon => {
 
 tableLibrary.querySelectorAll(".icon.borrow").forEach(eachBorrowIcon => {
     // Model
-    eachBorrowIcon.addEventListener("click", operateBorrowOpsModel);
+    eachBorrowIcon.addEventListener("click", initBorrowOpsModel);
 
     // View
     eachBorrowIcon.addEventListener("click", showBorrowOpsModal);
+
+    
+})
+
+modals.borrowOps.addEventListener("close", () => {
+    // Model
+    buffer.book.borrow.func.reset.call(buffer.book.borrow);
+    buffer.user.func.reset.call(buffer.user);
+
+    // View
+    modals.func.borrowOps.resetModalUI();
 })
 
 modals.borrowOps.querySelector("#rd-existing").addEventListener("click", () => {
@@ -69,10 +80,10 @@ modals.borrowOps.querySelectorAll(".for-borrow").forEach(each => {
             modals.func.borrowOps.checkBtnEnableCriteria("borrow", "new");
         }
         else {
-            
+
             modals.func.borrowOps.checkBtnEnableCriteria("borrow");
         }
-        
+
     })
 })
 
@@ -81,73 +92,59 @@ modals.borrowOps.querySelector("#user-expected-return-date").addEventListener("i
 modals.borrowOps.querySelector("#user-return-date").addEventListener("input", () => modals.func.borrowOps.validateReturnDate(false));
 
 modals.borrowOps.querySelector(".borrow-btn").addEventListener("click", evt => {
-    let memberid = modals.borrowOps.querySelector("#user-member-id").value;
-    let firstName = modals.borrowOps.querySelector("#user-first-name").value;
-    let lastName = modals.borrowOps.querySelector("#user-last-name").value;
-    let rowObj = tableRows.find(row => row.cells.id.textContent === buffer.book.borrow.metadata.idSelected); // We need this to update the table cell display
+    evt.preventDefault() // Prevent submission. we will submit manually
 
     if (!modals.borrowOps.querySelector("#borrow-form").checkValidity()) {
         modals.borrowOps.querySelector("#borrow-form").reportValidity(); // Because this is not a submit event, we have to call this manually to report validity
     }
 
     else {
-        // Model
         if (modals.func.borrowOps.getUserSelection() === "existing" || modals.func.borrowOps.getUserSelection() === "new") {
             // Model
-            if (modals.func.borrowOps.getUserSelection() === "new") {
-                buffer.user.instance = createUser(memberid, firstName, lastName);
-            }
-
-            if (buffer.user.instance && buffer.user.instance !== "duplicate") {
-                buffer.book.borrow.instance.borrower = buffer.user.instance;
-                buffer.book.borrow.instance.borrowDate = new Date(modals.borrowOps.querySelector("#user-borrow-date").value);
-                buffer.book.borrow.instance.expectedReturnDate = new Date(modals.borrowOps.querySelector("#user-expected-return-date").value);
-                buffer.book.borrow.instance.createNewBorrowHistory();
-                buffer.user.instance.createNewBorrowHistory(buffer.book.borrow.instance, buffer.book.borrow.instance.borrowDate, buffer.book.borrow.instance.expectedReturnDate); 
-            } 
+            operateBorrowModel();
 
             // View
-            if (buffer.user.instance && buffer.user.instance !== "duplicate") {
-                // Make sure to hide the error if no error in program
-                modals.borrowOps.querySelector("#user-duplicate").classList.add("hide");
-                modals.borrowOps.querySelector("#user-not-created").classList.add("hide");
-                
-                // Update the cells
-                // Note that month has to +1 because of how the getMonth() work where Jan is 0 and December is 11.
-                rowObj.cells.borrower.textContent = buffer.user.instance.firstName + " " + buffer.user.instance.lastName;
-                rowObj.cells.from.textContent = DateOps.parseDate(buffer.book.borrow.instance.borrowDate.getFullYear(), buffer.book.borrow.instance.borrowDate.getMonth() + 1, buffer.book.borrow.instance.borrowDate.getDate());
-                rowObj.cells.to.textContent = DateOps.parseDate(buffer.book.borrow.instance.expectedReturnDate.getFullYear(), buffer.book.borrow.instance.expectedReturnDate.getMonth() + 1, buffer.book.borrow.instance.expectedReturnDate.getDate());
-                rowObj.cells.duration.textContent = DateOps.diffDays(buffer.book.borrow.instance.borrowDate, buffer.book.borrow.instance.expectedReturnDate);
-                rowObj.cells.bookAvailability.textContent = buffer.book.borrow.instance.computeBorrowStatus();
+            operateBorrowView();
 
-                if (modals.func.borrowOps.getUserSelection() === "existing") {
-
-                }
-    
-                else {
-    
-                }
-
-                modals.borrowOps.querySelector("#borrow-form").submit();
-            }
-            else {
-                // Show error message 
-                if (buffer.user.instance === "duplicate") {
-                    modals.borrowOps.querySelector("#user-duplicate").classList.remove("hide");
-                }
-                else {
-                    modals.borrowOps.querySelector("#user-not-created").classList.remove("hide");
-                }
-            }
-            
         }
-
-        
     }
-
-    evt.preventDefault() // Prevent submission if validation fails
 })
 
+modals.borrowOps.querySelector(".return-btn").addEventListener("click", evt => {
+    evt.preventDefault() // Prevent submission. we will submit manually
+
+    if (!modals.borrowOps.querySelector("#borrow-form").checkValidity()) {
+        modals.borrowOps.querySelector("#borrow-form").reportValidity(); // Because this is not a submit event, we have to call this manually to report validity
+    }
+
+    else {
+        operateReturnModel(evt);
+        operateReturnView(evt);
+        modals.borrowOps.querySelector("#borrow-form").submit();
+    }
+})
+
+function operateReturnModel(evt) {
+    let dateReturn = new Date(modals.borrowOps.querySelector("#user-return-date").value);
+    buffer.book.borrow.instance.returnBook(dateReturn);
+    buffer.user.instance.returnBook(buffer.book.borrow.instance, dateReturn);
+}
+
+function operateReturnView(evt) {
+    let rowObj = tableRows.find(row => row.cells.id.textContent === buffer.book.borrow.metadata.idSelected);
+    buffer.book.borrow.instance.returnBookView(rowObj);
+}
+
+modals.bookOps.addEventListener("close", () => {
+    // Model
+    buffer.book.func.reset.call(buffer.book);
+
+    // View
+    modals.func.bookOps.resetInputVal();
+    modals.func.bookOps.toggleInput(false);
+    modals.func.bookOps.toggleSaveButton(true);
+    modals.func.bookOps.toggleEditIcon(false);
+})
 
 addBookBtn.addEventListener("click", e => {
     let btn = e.currentTarget;
@@ -243,7 +240,7 @@ modals.bookOps.querySelector(".save-btn").addEventListener("click", e => {
             // Model
             let get = modals.func.bookOps.getInput;
             createBook(get("id"), get("title"), get("author"), get("genre"), get("numPages"), get("summary"), get("coverImgURL"));
-            library.at(-1).addEditListenerForNewRow(showBookOpsModal);
+            library.at(-1).addListenerForNewRow(showBookOpsModal, combineModelAndViewForBorrowOps, operateDeletion);
 
             // View
             bookOpsForm.submit();
@@ -360,7 +357,12 @@ function deleteBookTableRow(evt) {
     tableRows.splice(btnIcon.parentIndex, 1);
 }
 
-function operateBorrowOpsModel(evt) {
+function operateDeletion(evt) {
+    deleteBook(evt);
+    deleteBookTableRow(evt);
+}
+
+function initBorrowOpsModel(evt) {
     let id = getParent(evt.currentTarget, "tr").getAttribute("data-book-id");
     let bookInstance = library.find(book => book.id === id);
     buffer.book.borrow.metadata.idSelected = id;
@@ -377,19 +379,90 @@ function showBorrowOpsModal(evt) {
 
 
     if (isBorrowed) {
+        // Disable the fieldset and hide it.
         modals.borrowOps.querySelector(".user-status-selection").disabled = true;
+        modals.borrowOps.querySelector(".user-status-selection").classList.add("hide");
+
+        // Disable necessary inputs and make certain inputs required
         modals.func.borrowOps.disableInputsUponBorrowed(true);
         modals.func.borrowOps.makeInputsRequired("return", true);
         modals.func.borrowOps.makeInputsRequired("borrow", false);
         modals.func.borrowOps.makeInputsRequired("new", false);
 
+        // Populate the inputs
+        modals.borrowOps.querySelector("#user-first-name").value = borrower.firstName;
+        modals.borrowOps.querySelector("#user-last-name").value = borrower.lastName;
+        modals.borrowOps.querySelector("#user-borrow-date").value = DateOps.serializeDateObj(buffer.book.borrow.instance.borrowDate); 
+        modals.borrowOps.querySelector("#user-expected-return-date").value = DateOps.serializeDateObj(buffer.book.borrow.instance.expectedReturnDate); 
     }
     else {
+
+        // Enable the fieldset and unhide it.
+        modals.borrowOps.querySelector(".user-status-selection").disabled = false;
+        modals.borrowOps.querySelector(".user-status-selection").classList.remove("hide");
+
+        // Disable necessary inputs and make certain inputs required
         modals.func.borrowOps.disableInputsForExistingUser(true);
         modals.func.borrowOps.makeInputsRequired("borrow", true);
         modals.func.borrowOps.makeInputsRequired("return", false);
         modals.func.borrowOps.makeInputsRequired("new", false);
     }
 
+    buffer.book.borrow.instance.populateBorrowHistoryTable();
+
     modals.borrowOps.showModal();
+}
+
+function combineModelAndViewForBorrowOps(evt) {
+    initBorrowOpsModel(evt);
+    showBorrowOpsModal(evt);
+}
+
+function operateBorrowModel() {
+
+    let memberid = modals.borrowOps.querySelector("#user-member-id").value;
+    let firstName = modals.borrowOps.querySelector("#user-first-name").value;
+    let lastName = modals.borrowOps.querySelector("#user-last-name").value;
+
+    if (modals.func.borrowOps.getUserSelection() === "new") {
+        buffer.user.instance = createUser(memberid, firstName, lastName);
+    }
+
+    if (buffer.user.instance && buffer.user.instance !== "duplicate") {
+        buffer.book.borrow.instance.borrower = buffer.user.instance;
+        buffer.book.borrow.instance.borrowDate = new Date(modals.borrowOps.querySelector("#user-borrow-date").value);
+        buffer.book.borrow.instance.expectedReturnDate = new Date(modals.borrowOps.querySelector("#user-expected-return-date").value);
+        buffer.book.borrow.instance.createNewBorrowHistory();
+        buffer.user.instance.createNewBorrowHistory(buffer.book.borrow.instance, buffer.book.borrow.instance.borrowDate, buffer.book.borrow.instance.expectedReturnDate);
+    }
+}
+
+function operateBorrowView() {
+    let rowObj = tableRows.find(row => row.cells.id.textContent === buffer.book.borrow.metadata.idSelected); // We need this to update the table cell display
+
+    // View
+    if (buffer.user.instance && buffer.user.instance !== "duplicate") {
+        // Make sure to hide the error if no error in program
+        modals.borrowOps.querySelector("#user-duplicate").classList.add("hide");
+        modals.borrowOps.querySelector("#user-not-created").classList.add("hide");
+
+        // Update the cells
+        // Note that month has to +1 because of how the getMonth() work where Jan is 0 and December is 11.
+        rowObj.cells.borrower.textContent = buffer.user.instance.firstName + " " + buffer.user.instance.lastName;
+        rowObj.cells.from.textContent = DateOps.parseDate(buffer.book.borrow.instance.borrowDate.getFullYear(), buffer.book.borrow.instance.borrowDate.getMonth() + 1, buffer.book.borrow.instance.borrowDate.getDate());
+        rowObj.cells.to.textContent = DateOps.parseDate(buffer.book.borrow.instance.expectedReturnDate.getFullYear(), buffer.book.borrow.instance.expectedReturnDate.getMonth() + 1, buffer.book.borrow.instance.expectedReturnDate.getDate());
+        rowObj.cells.duration.textContent = DateOps.diffDays(buffer.book.borrow.instance.borrowDate, buffer.book.borrow.instance.expectedReturnDate);
+        rowObj.cells.bookAvailability.textContent = buffer.book.borrow.instance.computeBorrowStatus();
+
+        modals.borrowOps.querySelector("#borrow-form").submit();
+    }
+    else {
+        // Show error message 
+        if (buffer.user.instance === "duplicate") {
+            modals.borrowOps.querySelector("#user-duplicate").classList.remove("hide");
+        }
+        else {
+            modals.borrowOps.querySelector("#user-not-created").classList.remove("hide");
+        }
+    }
 }

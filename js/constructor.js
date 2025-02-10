@@ -138,9 +138,11 @@ Book.prototype.createTableRow = function () {
     tableRows.push(tableRow); 
 } 
 
-Book.prototype.addEditListenerForNewRow = function (listenerCallBack) {
+Book.prototype.addListenerForNewRow = function (editListenerCallBack, borrowListenerCallBack, deleteListenerCallBack) {
     tableRows.at(-1).clickables.edit.wrapper.bookState = "existing";   
-    tableRows.at(-1).clickables.edit.wrapper.addEventListener("click", listenerCallBack);
+    tableRows.at(-1).clickables.edit.wrapper.addEventListener("click", editListenerCallBack);
+    tableRows.at(-1).clickables.borrow.wrapper.addEventListener("click", borrowListenerCallBack);
+    tableRows.at(-1).clickables.trash.wrapper.addEventListener("click", deleteListenerCallBack);
 }
 
 Book.prototype.computeBorrowStatus = function () {
@@ -165,11 +167,53 @@ Book.prototype.createNewBorrowHistory = function() {
 }
 
 Book.prototype.returnBook = function(dateActualReturn) {
-    let latestBorrowRecord = this.borrowHistory.at[-1];
-    latestBorrowRecord[actualReturnDate] = dateActualReturn;
+    let latestBorrowRecord = this.borrowHistory.at(-1);
+
+    this.actualReturnDate = dateActualReturn; 
+    latestBorrowRecord["actualReturnDate"] = dateActualReturn;
 
     // Calculate the duration borrowed
-    latestBorrowRecord[actualBorrowDuration] = latestBorrowRecord.borrowDate != null && dateActualReturn !== null?  DateOps.diffDays(this.borrowDate, this.actualReturnDate) : -1;
+    latestBorrowRecord["actualBorrowDuration"] = latestBorrowRecord.borrowDate != null && dateActualReturn !== null?  DateOps.diffDays(this.borrowDate, this.actualReturnDate) : -1;
+    this.borrower = null;
+    this.borrowDate = null;
+    this.expectedReturnDate = null;
+    this.actualReturnDate = null;
+}
+
+Book.prototype.returnBookView = function(affectedRow) {
+    affectedRow.cells.bookAvailability.textContent = "Available";
+    affectedRow.cells.borrower.textContent = "-";
+    affectedRow.cells.from.textContent = "-";
+    affectedRow.cells.to.textContent = "-";
+    affectedRow.cells.duration.textContent = "-";
+}
+
+Book.prototype.populateBorrowHistoryTable = function() {
+    const parentTable = modals.borrowOps.querySelector("#book-borrow-history tbody");
+    removeAllChildren(parentTable); // Remove all children
+    this.borrowHistory.forEach(each => {
+        this.addBorrowHistoryRow(each);
+    })
+}
+
+Book.prototype.addBorrowHistoryRow = function(eachHistoryItem) {
+    const parentTable = modals.borrowOps.querySelector("#book-borrow-history tbody");
+    const trow = document.createElement("tr");
+    const username = document.createElement("td");
+    const from = document.createElement("td");
+    const to = document.createElement("td");
+
+    username.textContent = eachHistoryItem.borrower.firstName + " " + eachHistoryItem.borrower.lastName;
+    from.textContent = DateOps.parseDateObj(eachHistoryItem.borrowDate);
+    to.textContent = eachHistoryItem.actualReturnDate? DateOps.parseDateObj(eachHistoryItem.actualReturnDate) : "To Be Returned @ " + DateOps.parseDateObj(eachHistoryItem.expectedReturnDate);  
+
+    trow.appendChild(username);
+    trow.appendChild(from);
+    trow.appendChild(to);
+
+    parentTable.appendChild(trow);
+
+    return trow;
 }
 
 User.prototype.createNewBorrowHistory = function(selectedBook, dateBorrow, dateExpectedReturn) {
@@ -187,11 +231,11 @@ User.prototype.createNewBorrowHistory = function(selectedBook, dateBorrow, dateE
 }
 
 User.prototype.returnBook = function(book, dateActualReturn) {
-    let latestBorrowRecord = this.borrowHistory.at[-1];
-    latestBorrowRecord[actualReturnDate] = dateActualReturn;
+    let latestBorrowRecord = this.borrowHistory.at(-1);
+    latestBorrowRecord["actualReturnDate"] = dateActualReturn;
 
     // Calculate the duration borrowed
-    latestBorrowRecord[actualBorrowDuration] = latestBorrowRecord.borrowDate != null && dateActualReturn !== null?  DateOps.diffDays(this.borrowDate, this.actualReturnDate) : -1;
+    latestBorrowRecord["actualBorrowDuration"] = latestBorrowRecord.borrowDate != null && dateActualReturn !== null?  DateOps.diffDays(latestBorrowRecord.borrowDate, dateActualReturn) : -1; 
 
     // Find the book to be returned and delete from borrowedBooks array
     let ind = this.borrowedBooks.findIndex(borrowedBook => borrowedBook.id === book.id);

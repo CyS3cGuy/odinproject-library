@@ -38,6 +38,11 @@ function generateBookID() {
     return (max + 1).toString().padStart(BOOKID_LENGTH, "0"); 
 }
 
+function removeAllChildren(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
 
 
 const DateOps = {
@@ -45,6 +50,14 @@ const DateOps = {
     parseDate: function (year, month, day) {
         return day.toString().padStart(2,"0") + "/" + month.toString().padStart(2,"0") + "/" + year.toString().padStart(4, "0"); 
     }, 
+
+    parseDateObj: function(dateObj) {
+        return dateObj.getDate().toString().padStart(2,"0") + "/" + (dateObj.getMonth()+1).toString().padStart(2, "0") + "/" + dateObj.getFullYear().toString().padStart(4, "0");
+    },
+
+    serializeDateObj(dateObj) {
+        return dateObj.toISOString().slice(0, 10); 
+    },
 
     diffDays: function(d1, d2) {
         var t2 = d2.getTime();

@@ -27,19 +27,27 @@ const buffer = {
 
             metadata: {
                 idSelected: null,
+            },
+
+            func: {
+                reset: function() {
+                    this.instance = null;
+                    this.metadata.idSelected = null;
+                }
             }
         }
     },
 
     user: {
         instance: null,
-        metadata: {
-
-        },
 
         func: {
             findUser: function (memberid) {
                 return users.find(user => user.memberid === memberid);
+            },
+
+            reset: function() {
+                this.instance = null;
             }
         }
     },
@@ -148,6 +156,11 @@ const modals = {
                 return selectedRadio.value; 
             },
 
+            resetUserSelection: function() {
+                modals.borrowOps.querySelector(".user-status-selection").disabled = false; 
+                modals.borrowOps.querySelector(`#rd-existing`).click(); // Select existing as user status
+            },
+
             disableInputsUponBorrowed: function (disable) {
                 modals.borrowOps.querySelectorAll("input").forEach(each => each.disabled = false);
                 modals.borrowOps.querySelectorAll(".disable-upon-borrowed").forEach(each => each.querySelector("input").disabled = disable);
@@ -244,7 +257,7 @@ const modals = {
                 modals.borrowOps.querySelectorAll(".form-set input").forEach(each => {
                     each.value = "";
                     each.dispatchEvent(new Event("input")); // Ensure the event is fired so that the listener at app.js can operate, like disabling the button
-                    modals.borrowOps.querySelector("#user-not-found").classList.add("hide");
+                    modals.borrowOps.querySelectorAll(".error .message").forEach(each => each.classList.add("hide"));
                 });
             },
 
@@ -271,6 +284,12 @@ const modals = {
                         returnDOM.setCustomValidity("");
                     } 
                 }
+            },
+
+            resetModalUI: function() {
+                modals.func.borrowOps.resetUserSelection();
+                modals.func.borrowOps.resetAllInputsVal();
+
             },
 
         },
