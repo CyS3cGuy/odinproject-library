@@ -20,9 +20,9 @@ function Book(id, title, author, genre, numPages, summary, coverImgURL) {
     this.coverImgURL = coverImgURL ? coverImgURL : "";
 
     this.borrower = null; 
-    this.borrowDate = "";
-    this.expectedReturnDate = ""; 
-    this.actualReturnDate = "";
+    this.borrowDate = null;
+    this.expectedReturnDate = null; 
+    this.actualReturnDate = null;
     this.borrowHistory = []; 
 }
   
@@ -32,19 +32,29 @@ function User(memberid, firstName, lastName) {
     this.firstName = firstName;
     this.lastName = lastName ? lastName : null;
 
-    this.borrowedBooks = [];
     this.borrowHistory = []; 
+    this.borrowedBooks = [];
 }
 
 function createBook(id, title, author, genre, numPages, summary, coverImgURL) {
     let newBook = new Book(id, title, author, genre, numPages, summary, coverImgURL);
     library.push(newBook);
     newBook.createTableRow(id, title, author); 
+
+    return newBook;
 }
 
 function createUser(memberid, firstName, lastName) {
+    // Validate there is no duplicate memberid
+    let duplicate = users.filter(user => user.memberid === memberid);
+
+    if (duplicate.length > 0) {
+        return "duplicate"; 
+    }
     let newUser = new User(memberid, firstName, lastName);
     users.push(newUser);
+
+    return newUser;
 }
 
 Book.prototype.createTableRow = function () {
@@ -139,4 +149,51 @@ Book.prototype.computeBorrowStatus = function () {
     if (!isBorrowed) {return "Available";}
         
     return today > this.expectedReturnDate? "Not Available (Overdue)" : DateOps.diffDays(today, this.expectedReturnDate) < RETURN_ALERT? "Not Available (Almost Overdue)" : "Not Available (Borrowed)";
+}
+
+Book.prototype.createNewBorrowHistory = function() {
+    const historicalItem = {
+        borrower: this.borrower,
+        borrowDate: this.borrowDate,
+        expectedReturnDate: this.expectedReturnDate,
+        actualReturnDate: null,
+        expectedBorrowDuration: this.borrowDate !== null && this.expectedReturnDate !== null? DateOps.diffDays(this.borrowDate, this.expectedReturnDate) : -1,
+        actualBorrowDuration: -1,
+    }
+
+    this.borrowHistory.push(historicalItem); 
+}
+
+Book.prototype.returnBook = function(dateActualReturn) {
+    let latestBorrowRecord = this.borrowHistory.at[-1];
+    latestBorrowRecord[actualReturnDate] = dateActualReturn;
+
+    // Calculate the duration borrowed
+    latestBorrowRecord[actualBorrowDuration] = latestBorrowRecord.borrowDate != null && dateActualReturn !== null?  DateOps.diffDays(this.borrowDate, this.actualReturnDate) : -1;
+}
+
+User.prototype.createNewBorrowHistory = function(selectedBook, dateBorrow, dateExpectedReturn) {
+    const historicalItem = {
+        book: selectedBook,
+        borrowDate: dateBorrow,
+        expectedReturnDate: dateExpectedReturn,
+        actualReturnDate: null,
+        expectedBorrowDuration: dateBorrow !== null && dateExpectedReturn !== null? DateOps.diffDays(dateBorrow, dateExpectedReturn) : -1,
+        actualBorrowDuration: -1,
+    }
+
+    this.borrowHistory.push(historicalItem); 
+    this.borrowedBooks.push(selectedBook);
+}
+
+User.prototype.returnBook = function(book, dateActualReturn) {
+    let latestBorrowRecord = this.borrowHistory.at[-1];
+    latestBorrowRecord[actualReturnDate] = dateActualReturn;
+
+    // Calculate the duration borrowed
+    latestBorrowRecord[actualBorrowDuration] = latestBorrowRecord.borrowDate != null && dateActualReturn !== null?  DateOps.diffDays(this.borrowDate, this.actualReturnDate) : -1;
+
+    // Find the book to be returned and delete from borrowedBooks array
+    let ind = this.borrowedBooks.findIndex(borrowedBook => borrowedBook.id === book.id);
+    this.borrowedBooks.splice(ind, 1);
 }

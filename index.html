@@ -138,20 +138,32 @@
             <form id="borrow-form" method="dialog">
                 <fieldset class="user-status-selection">    
                     <div class="existing-user">
-                        <input type="radio" name="user-status" id="rd-existing" checked>
+                        <input type="radio" name="user-status" id="rd-existing" value="existing" checked>
                         <label for="rd-existing">Existing User</label>
                     </div>
                 
                     <div class="new-user">
-                        <input type="radio" name="user-status" id="rd-new">
+                        <input type="radio" name="user-status" id="rd-new" value="new">
                         <label for="rd-new">New User</label>
                     </div>
                 </fieldset>
 
-                <div class="form-set hide-upon-borrowed hide-new">
-                    <label for="user-member-id">Member ID</label>
-                    <input type="search" name="user-member-id" id="user-member-id" placeholder="Search Member ID">  
-                    <span id="user-not-found" class="hide">ERROR: No user found</span>
+                <div class="error">
+                    <div id="user-not-found" class="hide">ERROR: No user found.</div>
+                    <div id="user-duplicate" class="hide">ERROR: Member ID already exists.</div>  
+                    <div id="user-not-created" class="hide">ERROR: User cannot be created. User is null.</div>  
+                </div>
+
+                <div class="form-set hide-upon-borrowed hide-new disable-new">
+                    <label for="user-search-member-id">Search Member ID</label>
+                    <input type="search" name="user-search-member-id" id="user-search-member-id" placeholder="Search Member ID">  
+                    
+                </div>
+
+                <div class="form-set hide-upon-borrowed hide-existing disable-existing for-new for-borrow"> 
+                    <label for="user-member-id">New Member ID</label>
+                    <input type="text" name="user-member-id" id="user-member-id" placeholder="Register new member ID">
+                    
                 </div>
 
                 <div class="form-set disable-upon-borrowed disable-existing hide-existing-temp for-borrow">

@@ -15,17 +15,6 @@ const buffer = {
         func: {
             reset: function () {
                 this.instance = null;
-                // this.instance.id = "xxxxxx"; 
-                // this.instance.title = "";
-                // this.instance.author = "";
-                // this.instance.genre = "";
-                // this.instance.numPages = "";
-                // this.instance.summary = "";
-                // this.instance.coverImgURL = "";
-
-                // this.instance.borrower = "";
-                // this.instance.borrowDate = "";
-                // this.instance.returnDate = "";
 
                 this.metadata.idSelected = null;
                 this.metadata.state = null;
@@ -154,6 +143,11 @@ const modals = {
             },
         },
         borrowOps: {
+            getUserSelection: function() {
+                const selectedRadio = modals.borrowOps.querySelector(`.user-status-selection input[name="user-status"]:checked`);
+                return selectedRadio.value; 
+            },
+
             disableInputsUponBorrowed: function (disable) {
                 modals.borrowOps.querySelectorAll("input").forEach(each => each.disabled = false);
                 modals.borrowOps.querySelectorAll(".disable-upon-borrowed").forEach(each => each.querySelector("input").disabled = disable);
@@ -171,7 +165,7 @@ const modals = {
             },
 
             makeInputsRequired: function (criteria, isRequired) {
-                let selector = "for-" + criteria + " input";
+                let selector = ".for-" + criteria + " input";
                 modals.borrowOps.querySelectorAll(selector).forEach(each => each.required = isRequired);
             },
 
@@ -229,13 +223,17 @@ const modals = {
                 
             },
 
-            checkBtnEnableCriteria: function(criteria) {
+            checkBtnEnableCriteria: function(criteria, notCriteria) {
+                // Note that the notCriteria argument refers to the string selector which we do not want to include
+                // For example, if I have a list of elements with class name of "borrow", out of which, we have one of the elements in which we want to exclude
+                // we can specify an exclusion selector as part of "notCriteria"
                 let btnSelector = "." + criteria + "-btn";
                 let inputSelector = ".for-" + criteria + " input";
                 let hasAllFilled = true;
                 modals.borrowOps.querySelectorAll(inputSelector).forEach(each => {
-                    hasAllFilled = hasAllFilled && each.value !== "";
-                   
+                    if (!(notCriteria && each.parentElement.classList.contains("for-" + notCriteria))) {
+                        hasAllFilled = hasAllFilled && each.value !== "";
+                    }
                 })
 
                 modals.borrowOps.querySelector(btnSelector).disabled = hasAllFilled? false : true;   
@@ -243,7 +241,7 @@ const modals = {
 
             resetAllInputsVal: function() {
                 
-                modals.borrowOps.querySelectorAll("input").forEach(each => {
+                modals.borrowOps.querySelectorAll(".form-set input").forEach(each => {
                     each.value = "";
                     each.dispatchEvent(new Event("input")); // Ensure the event is fired so that the listener at app.js can operate, like disabling the button
                     modals.borrowOps.querySelector("#user-not-found").classList.add("hide");
@@ -258,8 +256,6 @@ const modals = {
                 let borrowDate = new Date(borrowDateDOM.value);
 
                 let returnDate = isExpectedReturn? new Date(expectedReturnDOM.value) : new Date(returnDOM.value); 
-                console.log(borrowDate);
-                console.log(returnDate); 
 
                 if (returnDate <= borrowDate) {
                     if (isExpectedReturn) {
@@ -275,7 +271,7 @@ const modals = {
                         returnDOM.setCustomValidity("");
                     } 
                 }
-            }
+            },
 
         },
         confirmOps: {

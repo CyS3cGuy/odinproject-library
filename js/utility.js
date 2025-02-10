@@ -40,9 +40,10 @@ function generateBookID() {
 
 
 
-var DateOps = {
+const DateOps = {
+
     parseDate: function (year, month, day) {
-        return day + "/" + month + "/" + year;
+        return day.toString().padStart(2,"0") + "/" + month.toString().padStart(2,"0") + "/" + year.toString().padStart(4, "0"); 
     }, 
 
     diffDays: function(d1, d2) {
