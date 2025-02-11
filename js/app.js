@@ -175,7 +175,7 @@ addBookBtn.addEventListener("click", e => {
     showBookOpsModal(e);
 })
 
-modals.bookOps.querySelector("#book-cover .add-photo-trigger").addEventListener("click", () => virtualFileInput.click());
+modals.bookOps.querySelector(".add-photo-trigger").addEventListener("click", () => virtualFileInput.click()); 
 
 modals.bookOps.addEventListener("close", () => {
     // Model
@@ -219,15 +219,21 @@ Array.from(modals.bookOps.querySelectorAll(".form-set .input")).forEach(eachInpu
 modals.bookOps.querySelector(".save-btn").addEventListener("click", e => {
     e.preventDefault(); // Don't close the dialog upon save. define ourselves
 
-    modals.confirmOps.temp = {
-        confirmWhat: "saveBook",
-        confirmMessage: `save the changes?`,
-        var: null,
-    };
-
-    modals.confirmOps.showModal();
-    modals.func.confirmOps.updateMessage(modals.confirmOps.temp.confirmMessage);
+    if (modals.bookOps.querySelector("form").checkValidity()) {
+        modals.confirmOps.temp = {
+            confirmWhat: "saveBook",
+            confirmMessage: `save the changes?`,
+            var: null,
+        };
     
+        modals.confirmOps.showModal();
+        modals.func.confirmOps.updateMessage(modals.confirmOps.temp.confirmMessage);
+    }
+
+    
+    else {
+        modals.bookOps.querySelector("form").reportValidity(); 
+    }
 
 })
 
@@ -429,8 +435,9 @@ function operateBorrowView() {
         rowObj.cells.borrower.textContent = buffer.user.instance.firstName + " " + buffer.user.instance.lastName;
         rowObj.cells.from.textContent = DateOps.parseDate(buffer.book.borrow.instance.borrowDate.getFullYear(), buffer.book.borrow.instance.borrowDate.getMonth() + 1, buffer.book.borrow.instance.borrowDate.getDate());
         rowObj.cells.to.textContent = DateOps.parseDate(buffer.book.borrow.instance.expectedReturnDate.getFullYear(), buffer.book.borrow.instance.expectedReturnDate.getMonth() + 1, buffer.book.borrow.instance.expectedReturnDate.getDate());
-        rowObj.cells.duration.textContent = DateOps.diffDays(buffer.book.borrow.instance.borrowDate, buffer.book.borrow.instance.expectedReturnDate);
-        rowObj.cells.bookAvailability.textContent = buffer.book.borrow.instance.computeBorrowStatus();
+        rowObj.cells.duration.textContent = DateOps.diffDays(buffer.book.borrow.instance.borrowDate, buffer.book.borrow.instance.expectedReturnDate).toString() + " days"; 
+        rowObj.cells.bookAvailability.textContent = buffer.book.borrow.instance.computeBorrowStatus()[0];
+        rowObj.cells.bookAvailability.classList.add(buffer.book.borrow.instance.computeBorrowStatus()[1]);
 
         modals.borrowOps.querySelector("#borrow-form").submit();
     }

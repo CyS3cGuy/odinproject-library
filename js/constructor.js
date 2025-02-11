@@ -124,6 +124,7 @@ Book.prototype.createTableRow = function () {
     cells.title.textContent = this.title === "" ? "-" : this.title;
     cells.author.textContent = this.author === "" ? "-" : this.author;
     cells.bookAvailability.textContent = "Available";
+    cells.bookAvailability.classList.add("available"); 
     cells.borrower.textContent = "-";
     cells.from.textContent = "-";
     cells.to.textContent = "-";
@@ -148,9 +149,9 @@ Book.prototype.addListenerForNewRow = function (editListenerCallBack, borrowList
 Book.prototype.computeBorrowStatus = function () {
     let isBorrowed = this.borrower !== null && this.borrower !== "";  
 
-    if (!isBorrowed) {return "Available";}
+    if (!isBorrowed) {return ["Available", "available"];}
         
-    return today > this.expectedReturnDate? "Not Available (Overdue)" : DateOps.diffDays(today, this.expectedReturnDate) < RETURN_ALERT? "Not Available (Almost Overdue)" : "Not Available (Borrowed)";
+    return today > this.expectedReturnDate? ["Not Available (Overdue)", "overdue"] : DateOps.diffDays(today, this.expectedReturnDate) < RETURN_ALERT? ["Not Available (Almost Overdue)", "almost-overdue"] : ["Not Available (Borrowed)", "borrowed"]; 
 }
 
 Book.prototype.createNewBorrowHistory = function() {

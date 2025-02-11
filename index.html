@@ -4,116 +4,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/custom.css">
+    <link rel="stylesheet" href="./css/modern-normalize.css">
+    <link rel="stylesheet" href="./css/color.css">
+    <link rel="stylesheet" href="./css/custom.css"> 
     <title>Document</title>
 </head>
 
 <body>
-    <div class="main">
+    <div id="main">
         <header id="header">
-            <div id="header-title">Simply Library</div>
-            <div>
-                Today's Date: <span id="header-date"></span>
+            <div class="inner">
+                <div id="header-title">Simply Library</div>
+                <div>
+                    Today's Date: <span id="header-date"></span>
+                </div>
             </div>
         </header>
 
         <div id="content">
-            <table>
-                <colgroup>
-                    <col>
-                    <col>
-                    <col>
-                    <col>
-                    <col>
-                    <col>
-                    <col>
-                    <col>
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Author</th>
-                        <th scope="col">Borrower</th>
-                        <th scope="col">From</th>
-                        <th scope="col">To</th>
-                        <th scope="col">Duration</th>
-                        <th scope="col">Availability</th>
-                        <th scope="col">Action</th>
-
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                </tbody>
-            </table>
-
-            <button type="button" title="Add New Book" id="add-book-btn">+</button>
+            <div class="inner">
+                <table>
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Author</th>
+                            <th scope="col">Borrower</th>
+                            <th scope="col">From</th>
+                            <th scope="col">To</th>
+                            <th scope="col">Duration</th>
+                            <th scope="col">Availability</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <button type="button" title="Add New Book" id="add-book-btn">+</button>
+            </div>
         </div>
 
-        <dialog id="book-operate">      
+        <dialog id="book-operate"> 
+             
             <form method="dialog"> 
-                <button class="close-btn close-modal" formnovalidate>X</button>
-                <div class="form-set">
-                    <div id="book-cover"  class="img-box flex-center input" data-input-field="coverImgURL">
-                        <p>Add a cover image</p> 
-                        <img src="./images/svg/add_a_photo.svg" alt="Add a Photo" class="add-photo-trigger">
-                    </div> 
-                </div>
+                <div class="close-btn-box">
+                    <button class="close-btn close-modal" title="Close" formnovalidate>X</button>
+                </div>    
 
-                <div class="form-set">
-                    <label for="book-id">ID</label> 
-                    <input class="input" type="text" name="book-id" id="book-id" data-input-field="id" required>
-                </div>
-
-                <div class="form-set">
-                    <label for="book-title">Title <span class="aria-required">*</span></label> 
-                    <input class="input" type="text" name="book-title" id="book-title" data-input-field="title" required> 
-                    <div class="edit icon">
-                        <img src="./images/svg/edit.svg" alt="Edit">
+                <div class="form-set book-cover-form-set">
+                    <div id="book-cover" class="img-box flex-center input" data-input-field="coverImgURL">
+                    
                     </div>
-                </div>
-
-                <div class="form-set">
-                    <label for="book-author">Author <span class="aria-required">*</span></label> 
-                    <input class="input" type="text" name="book-author" id="book-author" data-input-field="author" required>
-                    <div class="edit icon">
-                        <img src="./images/svg/edit.svg" alt="Edit">
-                    </div>
-                </div>
-
-                <div class="form-set">
-                    <label for="book-genre">Genre</label>
-                    <input class="input" type="text" name="book-genre" id="book-genre" data-input-field="genre">
-                    <div class="edit icon">
-                        <img src="./images/svg/edit.svg" alt="Edit">
-                    </div>
-                </div>
-
-                <div class="form-set">
-                    <label for="book-pages">Total Pages</label>
-                    <input class="input" type="number" name="book-pages" id="book-pages" data-input-field="numPages">
-                    <div class="edit icon">
-                        <img src="./images/svg/edit.svg" alt="Edit">
-                    </div>
-                </div>
-
-                <div class="form-set">
-                    <label for="book-summary">Summary / Descriptions</label>
-                    <textarea class="input" name="book-summary" id="book-summary" data-input-field="summary"></textarea>
-                    <div class="edit icon">
-                        <img src="./images/svg/edit.svg" alt="Edit">
+                    <div id="book-cover-overlay" class="img-box add-photo-trigger" title="Add / Change cover photo"> 
+                        <img src="./images/svg/add_a_photo.svg" alt="Add a Photo">
                     </div>
                 </div>
                 
-                <button class="save-btn">Save</button>
-                <button class="cancel-btn close-modal" formnovalidate>Return</button>  
+                <div class="form-inner">
+                    <div class="form-set">
+                        <label for="book-id">ID</label>
+                        <input class="input" type="text" name="book-id" id="book-id" data-input-field="id" required>
+                    </div>
+                    <div class="form-set">
+                        <label for="book-title">Title <span class="aria-required">*</span></label>
+                        <input class="input" type="text" name="book-title" id="book-title" data-input-field="title" required>
+                        <div class="edit icon" title="Edit title">
+                            <img src="./images/svg/edit.svg" alt="Edit">
+                        </div>
+                    </div>
+                    <div class="form-set">
+                        <label for="book-author">Author <span class="aria-required">*</span></label>
+                        <input class="input" type="text" name="book-author" id="book-author" data-input-field="author" required>
+                        <div class="edit icon" title="Edit author">
+                            <img src="./images/svg/edit.svg" alt="Edit">
+                        </div>
+                    </div>
+                    <div class="form-set">
+                        <label for="book-genre">Genre</label>
+                        <select class="input" name="book-genre" id="book-genre" data-input-field="genre">
+                            <option value=""></option> 
+                            <option value="Thriller">Thriller</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Kid">Kid</option>
+                            <option value="Novel">Novel</option>
+                            <option value="Mystery">Mystery</option>
+                          </select>
+                        <div class="edit icon" title="Edit genre">
+                            <img src="./images/svg/edit.svg" alt="Edit">
+                        </div>
+                    </div>
+                    <div class="form-set">
+                        <label for="book-pages">Total Pages</label>
+                        <input class="input" type="number" name="book-pages" id="book-pages" data-input-field="numPages">
+                        <div class="edit icon" title="Edit total pages">
+                            <img src="./images/svg/edit.svg" alt="Edit">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-set summary-form-set">
+                    <div class="one-row">
+                        <label for="book-summary">Summary / Descriptions</label>
+                        <div class="edit icon" title="Edit summary / descriptions">
+                            <img src="./images/svg/edit.svg" alt="Edit">
+                        </div>
+                    </div>
+                    <textarea class="input" name="book-summary" id="book-summary" data-input-field="summary" rows="10"></textarea> 
+                </div>
+                
+
+                <div class="btn-box">
+                    <button class="save-btn button-primary">Save</button> 
+                    <button class="cancel-btn close-modal button-secondary" formnovalidate>Return</button> 
+                </div>
             </form>
         </dialog>
 
         <dialog id="borrow-operate">   
-            <form method="dialog">
+            <form class="close-form" method="dialog">
                 <button class="close-btn" formnovalidate>X</button> 
             </form> 
 
@@ -191,23 +209,6 @@
                         </thead>
 
                         <tbody>
-                            <tr>
-                                <td>User 000</td>
-                                <td>03/05/2024</td>
-                                <td>04/05/2024</td>
-                            </tr>
-
-                            <tr>
-                                <td>User 001</td>
-                                <td>12/07/2024</td>
-                                <td>01/08/2024</td>
-                            </tr>
-
-                            <tr>
-                                <td>User 002</td>
-                                <td>03/08/2024</td>
-                                <td>To be returned</td> 
-                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -222,13 +223,15 @@
             <form method="dialog">
                 <div class="confirmation">Are you sure to <span class="msg"></span>?</div>
                 <div class="decision-btn">
-                    <button class="yes-btn">Yes</button>
-                    <button class="no-btn">Cancel</button>
+                    <button class="yes-btn button-primary">Yes</button>
+                    <button class="no-btn button-secondary">Cancel</button> 
                 </div>
             </form>
         </dialog>
  
-        <footer id="footer">&copy; 2025 All Righs Reserved by CyS3cGuy</footer>
+        <footer id="footer">
+            <div class="inner">&copy; 2025 All Righs Reserved by CyS3cGuy</div>
+        </footer>
 
     </div>
 

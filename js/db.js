@@ -103,7 +103,7 @@ const modals = {
                     eachInput.value = "";
                     eachInput.changed = false;
                 });
-                modals.func.bookOps.setCoverImage(null);
+                modals.func.bookOps.setCoverImage(null);  
             },
 
             checkValidInputs: function () {
@@ -144,9 +144,15 @@ const modals = {
             },
 
             setCoverImage: function (picURL) {
-                modals.bookOps.querySelector("#book-cover").style.backgroundImage = picURL || picURL !== "" ? `url(${picURL})` : "none";
-                modals.bookOps.querySelector("#book-cover").value = picURL || picURL !== "" ? picURL : ""; // set this value (even though not affecting the UI display for use later)
-            },
+                if (picURL && picURL !== "") {
+                    modals.bookOps.querySelector("#book-cover").style.backgroundImage = `url(${picURL})`; 
+                    modals.bookOps.querySelector("#book-cover").value = picURL;
+                }
+                else {
+                    modals.bookOps.querySelector("#book-cover").style.removeProperty("background-image");
+                    modals.bookOps.querySelector("#book-cover").value = "";
+                }
+            }, 
 
             toggleEditIcon: function (disable) {
                 modals.bookOps.querySelectorAll(".form-set .edit").forEach(eachEdit => {
@@ -207,20 +213,19 @@ const modals = {
             showBorrowStatus: function (borrowStatus) {
                 const borrowStatusLabel = modals.borrowOps.querySelector("#user-borrow-status");
                 const nextActionLabel = modals.borrowOps.querySelector("#user-available-action");
-                borrowStatusLabel.textContent = borrowStatus;
+                borrowStatusLabel.textContent = borrowStatus[0];
 
                 if (borrowStatus === "Available") {
-                    borrowStatusLabel.classList.add("borrow-available");
                     nextActionLabel.textContent = "Borrowed";
                 }
                 else if (borrowStatus.includes("Almost Overdue")) {
-                    borrowStatusLabel.classList.add("borrow-almost-overdue");
                     nextActionLabel.textContent = "Returned";
                 }
                 else {
-                    borrowStatusLabel.classList.add("borrow-overdue");
                     nextActionLabel.textContent = "Returned";
                 }
+
+                borrowStatusLabel.classList.add(borrowStatus[1]);
             },
 
             updateBookTitle: function (title) {
