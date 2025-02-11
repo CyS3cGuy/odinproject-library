@@ -231,62 +231,6 @@ modals.bookOps.querySelector(".save-btn").addEventListener("click", e => {
 
 })
 
-function operateSave() {
-    let allInputs = modals.bookOps.querySelectorAll(".form-set .input");
-    let bookOpsForm = modals.bookOps.querySelector("form");
-    let currentField = "";
-
-    if (buffer.book.metadata.state === "existing") {
-        allInputs.forEach(each => {
-            currentField = each.getAttribute("data-input-field");
-
-
-            // Model 
-            let bookSelected = buffer.book.instance;
-            let rowObj = tableRows.find(row => row.cells.id.textContent === buffer.book.metadata.idSelected);
-            let pointedCell = rowObj.cells[currentField];
-
-            // View
-            // If there is a change in the input value
-            // update the book object
-            if (each.changed) {
-                bookSelected[currentField] = each.value;
-            }
-
-            // table will selectively display certain cells from book
-            // so we need to check if the property of the cells exist.. for example, genre, summary does not have a place in the table cell itself, so "pointedCell" will fetch undefined as it cannot find the key-value pair
-            if (pointedCell) {
-                pointedCell.textContent = each.value;
-            }
-
-
-            // Reset the changed variable in the input
-            each.changed = false;
-        })
-
-        modals.func.bookOps.toggleSaveButton(false); // disable the save button
-
-        // Disable all inputs except the cover image
-        modals.func.bookOps.toggleInput(true);
-
-    } else {
-
-        if (modals.func.bookOps.checkValidInputs()) {
-            // Model
-            let get = modals.func.bookOps.getInput;
-            createBook(get("id"), get("title"), get("author"), get("genre"), get("numPages"), get("summary"), get("coverImgURL"));
-            library.at(-1).addListenerForNewRow(showBookOpsModal, combineModelAndViewForBorrowOps, operateDeletion);
-
-            // View
-            bookOpsForm.submit();
-        }
-        else {
-            bookOpsForm.reportValidity();
-        }
-
-    }
-}
-
 // For fetching files
 virtualFileInput.addEventListener("change", e => {
     const pics = e.target.files;
@@ -521,4 +465,60 @@ function operateReturnView() {
 function operateReturn() {
     operateReturnModel();
     operateReturnView();
+}
+
+function operateSave() {
+    let allInputs = modals.bookOps.querySelectorAll(".form-set .input");
+    let bookOpsForm = modals.bookOps.querySelector("form");
+    let currentField = "";
+
+    if (buffer.book.metadata.state === "existing") {
+        allInputs.forEach(each => {
+            currentField = each.getAttribute("data-input-field");
+
+
+            // Model 
+            let bookSelected = buffer.book.instance;
+            let rowObj = tableRows.find(row => row.cells.id.textContent === buffer.book.metadata.idSelected);
+            let pointedCell = rowObj.cells[currentField];
+
+            // View
+            // If there is a change in the input value
+            // update the book object
+            if (each.changed) {
+                bookSelected[currentField] = each.value;
+            }
+
+            // table will selectively display certain cells from book
+            // so we need to check if the property of the cells exist.. for example, genre, summary does not have a place in the table cell itself, so "pointedCell" will fetch undefined as it cannot find the key-value pair
+            if (pointedCell) {
+                pointedCell.textContent = each.value;
+            }
+
+
+            // Reset the changed variable in the input
+            each.changed = false;
+        })
+
+        modals.func.bookOps.toggleSaveButton(false); // disable the save button
+
+        // Disable all inputs except the cover image
+        modals.func.bookOps.toggleInput(true);
+
+    } else {
+
+        if (modals.func.bookOps.checkValidInputs()) {
+            // Model
+            let get = modals.func.bookOps.getInput;
+            createBook(get("id"), get("title"), get("author"), get("genre"), get("numPages"), get("summary"), get("coverImgURL"));
+            library.at(-1).addListenerForNewRow(showBookOpsModal, combineModelAndViewForBorrowOps, operateDeletion);
+
+            // View
+            bookOpsForm.submit();
+        }
+        else {
+            bookOpsForm.reportValidity();
+        }
+
+    }
 }
