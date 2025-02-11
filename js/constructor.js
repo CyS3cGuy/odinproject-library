@@ -1,9 +1,9 @@
 const tableRows = []; 
 
-const RETURN_ALERT = 4;  
+const RETURN_ALERT = 4; // The number of days for program to alert librarian that the book is about to be overdue. 
 const TODAY_YEAR = 2025;
-const TODAY_MONTH = 5;
-const TODAY_DAY = 13; 
+const TODAY_MONTH = 2;
+const TODAY_DAY = 10; 
 const today = new Date(TODAY_YEAR, TODAY_MONTH, TODAY_DAY); 
 
 document.querySelector("#header-date").textContent = DateOps.parseDate(today.getFullYear(), today.getMonth(), today.getDate());       

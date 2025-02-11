@@ -19,7 +19,11 @@ const buffer = {
                 this.metadata.idSelected = null;
                 this.metadata.state = null;
                 this.metadata.coverImgURL = null;
-            }
+            },
+            findBook: function(bookid) {
+                return library.find(book => book.id === bookid);
+            },
+
         },
 
         borrow: {
@@ -294,7 +298,9 @@ const modals = {
 
         },
         confirmOps: {
-
+            updateMessage: function(message) {
+                modals.confirmOps.querySelector(".confirmation .msg").textContent = message;
+            }
         }
     },
     

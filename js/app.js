@@ -3,6 +3,24 @@ const addBookBtn = document.querySelector("#content #add-book-btn");
 const virtualFileInput = createFileInput();
 const reader = new FileReader();
 
+modals.confirmOps.querySelector(".yes-btn").addEventListener("click", evt => {
+    let confirmWhat = modals.confirmOps.temp.confirmWhat;
+
+    if (confirmWhat === "deleteBook") {
+        operateDeletion(modals.confirmOps.temp.var);
+    } 
+    else if (confirmWhat === "borrowBook") {
+        operateBorrow();
+    }
+
+    else if (confirmWhat === "returnBook") {
+        operateReturn();
+    }
+
+    else if (confirmWhat === "saveBook") {
+        operateSave();
+    }
+})
 
 tableLibrary.querySelectorAll(".icon.edit").forEach(eachEditIcon => {
     // Model
@@ -13,11 +31,17 @@ tableLibrary.querySelectorAll(".icon.edit").forEach(eachEditIcon => {
 })
 
 tableLibrary.querySelectorAll(".icon.delete").forEach(eachDeleteIcon => {
-    // Model
-    eachDeleteIcon.addEventListener("click", deleteBook);
 
-    // View
-    eachDeleteIcon.addEventListener("click", deleteBookTableRow);
+    eachDeleteIcon.addEventListener("click", evt => {
+        modals.confirmOps.temp = {
+            confirmWhat: "deleteBook",
+            confirmMessage: `delete book with title of "${buffer.book.func.findBook(getParent(eachDeleteIcon, "tr").getAttribute("data-book-id")).title}"?`,
+            var: eachDeleteIcon,
+        };
+
+        modals.confirmOps.showModal();
+        modals.func.confirmOps.updateMessage(modals.confirmOps.temp.confirmMessage);
+    })
 })
 
 tableLibrary.querySelectorAll(".icon.borrow").forEach(eachBorrowIcon => {
@@ -27,7 +51,7 @@ tableLibrary.querySelectorAll(".icon.borrow").forEach(eachBorrowIcon => {
     // View
     eachBorrowIcon.addEventListener("click", showBorrowOpsModal);
 
-    
+
 })
 
 modals.borrowOps.addEventListener("close", () => {
@@ -100,12 +124,15 @@ modals.borrowOps.querySelector(".borrow-btn").addEventListener("click", evt => {
 
     else {
         if (modals.func.borrowOps.getUserSelection() === "existing" || modals.func.borrowOps.getUserSelection() === "new") {
-            // Model
-            operateBorrowModel();
 
-            // View
-            operateBorrowView();
+            modals.confirmOps.temp = {
+                confirmWhat: "borrowBook",
+                confirmMessage: `lend book with title of "${buffer.book.borrow.instance.title}"?`,
+                var: null,
+            };
 
+            modals.confirmOps.showModal();
+            modals.func.confirmOps.updateMessage(modals.confirmOps.temp.confirmMessage);
         }
     }
 })
@@ -118,22 +145,17 @@ modals.borrowOps.querySelector(".return-btn").addEventListener("click", evt => {
     }
 
     else {
-        operateReturnModel(evt);
-        operateReturnView(evt);
-        modals.borrowOps.querySelector("#borrow-form").submit();
+
+        modals.confirmOps.temp = { 
+            confirmWhat: "returnBook",
+            confirmMessage: `return book with title of "${buffer.book.borrow.instance.title}"?`,
+            var: null,
+        };
+
+        modals.confirmOps.showModal();
+        modals.func.confirmOps.updateMessage(modals.confirmOps.temp.confirmMessage);
     }
 })
-
-function operateReturnModel(evt) {
-    let dateReturn = new Date(modals.borrowOps.querySelector("#user-return-date").value);
-    buffer.book.borrow.instance.returnBook(dateReturn);
-    buffer.user.instance.returnBook(buffer.book.borrow.instance, dateReturn);
-}
-
-function operateReturnView(evt) {
-    let rowObj = tableRows.find(row => row.cells.id.textContent === buffer.book.borrow.metadata.idSelected);
-    buffer.book.borrow.instance.returnBookView(rowObj);
-}
 
 modals.bookOps.addEventListener("close", () => {
     // Model
@@ -197,6 +219,19 @@ Array.from(modals.bookOps.querySelectorAll(".form-set .input")).forEach(eachInpu
 modals.bookOps.querySelector(".save-btn").addEventListener("click", e => {
     e.preventDefault(); // Don't close the dialog upon save. define ourselves
 
+    modals.confirmOps.temp = {
+        confirmWhat: "saveBook",
+        confirmMessage: `save the changes?`,
+        var: null,
+    };
+
+    modals.confirmOps.showModal();
+    modals.func.confirmOps.updateMessage(modals.confirmOps.temp.confirmMessage);
+    
+
+})
+
+function operateSave() {
     let allInputs = modals.bookOps.querySelectorAll(".form-set .input");
     let bookOpsForm = modals.bookOps.querySelector("form");
     let currentField = "";
@@ -250,8 +285,7 @@ modals.bookOps.querySelector(".save-btn").addEventListener("click", e => {
         }
 
     }
-
-})
+}
 
 // For fetching files
 virtualFileInput.addEventListener("change", e => {
@@ -335,8 +369,8 @@ function showBookOpsModal(evt) {
 };
 
 
-function deleteBook(evt) {
-    let btnIcon = evt.currentTarget;
+function deleteBook(btnIcon) {
+    // let btnIcon = evt.currentTarget;
     let associatedTableRow = getParent(btnIcon, "tr");
     let id = associatedTableRow.getAttribute("data-book-id");
 
@@ -347,8 +381,8 @@ function deleteBook(evt) {
     library.splice(associatedLibraryIndex, 1);
 }
 
-function deleteBookTableRow(evt) {
-    let btnIcon = evt.currentTarget;
+function deleteBookTableRow(btnIcon) {
+    // let btnIcon = evt.currentTarget;
 
     // remove from DOM
     tableRows[btnIcon.parentIndex].element.remove();
@@ -392,8 +426,8 @@ function showBorrowOpsModal(evt) {
         // Populate the inputs
         modals.borrowOps.querySelector("#user-first-name").value = borrower.firstName;
         modals.borrowOps.querySelector("#user-last-name").value = borrower.lastName;
-        modals.borrowOps.querySelector("#user-borrow-date").value = DateOps.serializeDateObj(buffer.book.borrow.instance.borrowDate); 
-        modals.borrowOps.querySelector("#user-expected-return-date").value = DateOps.serializeDateObj(buffer.book.borrow.instance.expectedReturnDate); 
+        modals.borrowOps.querySelector("#user-borrow-date").value = DateOps.serializeDateObj(buffer.book.borrow.instance.borrowDate);
+        modals.borrowOps.querySelector("#user-expected-return-date").value = DateOps.serializeDateObj(buffer.book.borrow.instance.expectedReturnDate);
     }
     else {
 
@@ -465,4 +499,26 @@ function operateBorrowView() {
             modals.borrowOps.querySelector("#user-not-created").classList.remove("hide");
         }
     }
+}
+
+function operateBorrow() {
+    operateBorrowModel();
+    operateBorrowView(); 
+}
+
+function operateReturnModel() {
+    let dateReturn = new Date(modals.borrowOps.querySelector("#user-return-date").value);
+    buffer.book.borrow.instance.returnBook(dateReturn);
+    buffer.user.instance.returnBook(buffer.book.borrow.instance, dateReturn);
+}
+
+function operateReturnView() {
+    let rowObj = tableRows.find(row => row.cells.id.textContent === buffer.book.borrow.metadata.idSelected);
+    buffer.book.borrow.instance.returnBookView(rowObj);
+    modals.borrowOps.querySelector("#borrow-form").submit();
+}
+
+function operateReturn() {
+    operateReturnModel();
+    operateReturnView();
 }
