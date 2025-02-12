@@ -458,6 +458,9 @@ button:focus-visible {
         margin: 2rem 0;
         background: rgba(182, 182, 182, 0.2);
         padding: 0.1rem 1rem 2rem 1rem;
+        max-height: 30rem;   
+        overflow-y: auto;  
+        
 
         h4 {
             font-weight: bold;

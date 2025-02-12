@@ -4,9 +4,9 @@ const RETURN_ALERT = 4; // The number of days for program to alert librarian tha
 const TODAY_YEAR = 2025;
 const TODAY_MONTH = 2;
 const TODAY_DAY = 10; 
-const today = new Date(TODAY_YEAR, TODAY_MONTH, TODAY_DAY); 
+const today = new Date(TODAY_YEAR, TODAY_MONTH-1, TODAY_DAY); // month counts from 0 in javascript 
 
-document.querySelector("#header-date").textContent = DateOps.parseDate(today.getFullYear(), today.getMonth(), today.getDate());       
+document.querySelector("#header-date").textContent = DateOps.parseDate(today.getFullYear(), today.getMonth()+1, today.getDate()); 
 
 // About books
 
@@ -183,6 +183,8 @@ Book.prototype.returnBook = function(dateActualReturn) {
 
 Book.prototype.returnBookView = function(affectedRow) {
     affectedRow.cells.bookAvailability.textContent = "Available";
+    affectedRow.cells.bookAvailability.className = "";
+    affectedRow.cells.bookAvailability.classList.add("available"); 
     affectedRow.cells.borrower.textContent = "-";
     affectedRow.cells.from.textContent = "-";
     affectedRow.cells.to.textContent = "-";

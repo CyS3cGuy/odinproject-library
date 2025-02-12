@@ -437,6 +437,7 @@ function operateBorrowView() {
         rowObj.cells.to.textContent = DateOps.parseDate(buffer.book.borrow.instance.expectedReturnDate.getFullYear(), buffer.book.borrow.instance.expectedReturnDate.getMonth() + 1, buffer.book.borrow.instance.expectedReturnDate.getDate());
         rowObj.cells.duration.textContent = DateOps.diffDays(buffer.book.borrow.instance.borrowDate, buffer.book.borrow.instance.expectedReturnDate).toString() + " days"; 
         rowObj.cells.bookAvailability.textContent = buffer.book.borrow.instance.computeBorrowStatus()[0];
+        rowObj.cells.bookAvailability.className = "";  
         rowObj.cells.bookAvailability.classList.add(buffer.book.borrow.instance.computeBorrowStatus()[1]);
 
         modals.borrowOps.querySelector("#borrow-form").submit();

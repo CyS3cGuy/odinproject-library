@@ -215,16 +215,16 @@ const modals = {
                 const nextActionLabel = modals.borrowOps.querySelector("#user-available-action");
                 borrowStatusLabel.textContent = borrowStatus[0];
 
-                if (borrowStatus === "Available") {
+                if (borrowStatus[0] === "Available") {
                     nextActionLabel.textContent = "Borrowed";
                 }
-                else if (borrowStatus.includes("Almost Overdue")) {
+                else if (borrowStatus[0].includes("Almost Overdue")) {
                     nextActionLabel.textContent = "Returned";
                 }
                 else {
                     nextActionLabel.textContent = "Returned";
-                }
-
+                } 
+                borrowStatusLabel.className = "";    
                 borrowStatusLabel.classList.add(borrowStatus[1]);
             },
 
