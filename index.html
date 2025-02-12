@@ -61,53 +61,55 @@
                     <button class="close-btn close-modal" title="Close" formnovalidate>X</button>
                 </div>    
 
-                <div class="form-set book-cover-form-set">
-                    <div id="book-cover" class="img-box flex-center input" data-input-field="coverImgURL">
+                <div class="grid-two-cols">
+                    <div class="form-set book-cover-form-set flex-center"> 
+                        <div id="book-cover" class="img-box flex-center input" data-input-field="coverImgURL">
                     
-                    </div>
-                    <div id="book-cover-overlay" class="img-box add-photo-trigger" title="Add / Change cover photo"> 
-                        <img src="./images/svg/add_a_photo.svg" alt="Add a Photo">
-                    </div>
-                </div>
-                
-                <div class="form-inner">
-                    <div class="form-set">
-                        <label for="book-id">ID</label>
-                        <input class="input" type="text" name="book-id" id="book-id" data-input-field="id" required>
-                    </div>
-                    <div class="form-set">
-                        <label for="book-title">Title <span class="aria-required">*</span></label>
-                        <input class="input" type="text" name="book-title" id="book-title" data-input-field="title" required>
-                        <div class="edit icon" title="Edit title">
-                            <img src="./images/svg/edit.svg" alt="Edit">
+                        </div>
+                        <div id="book-cover-overlay" class="img-box add-photo-trigger" title="Add / Change cover photo">
+                            <img src="./images/svg/add_a_photo.svg" alt="Add a Photo">
                         </div>
                     </div>
-                    <div class="form-set">
-                        <label for="book-author">Author <span class="aria-required">*</span></label>
-                        <input class="input" type="text" name="book-author" id="book-author" data-input-field="author" required>
-                        <div class="edit icon" title="Edit author">
-                            <img src="./images/svg/edit.svg" alt="Edit">
+                    
+                    <div class="form-inner">
+                        <div class="form-set">
+                            <label for="book-id">ID</label>
+                            <input class="input" type="text" name="book-id" id="book-id" data-input-field="id" required>
                         </div>
-                    </div>
-                    <div class="form-set">
-                        <label for="book-genre">Genre</label>
-                        <select class="input" name="book-genre" id="book-genre" data-input-field="genre">
-                            <option value=""></option> 
-                            <option value="Thriller">Thriller</option>
-                            <option value="Romance">Romance</option>
-                            <option value="Kid">Kid</option>
-                            <option value="Novel">Novel</option>
-                            <option value="Mystery">Mystery</option>
-                          </select>
-                        <div class="edit icon" title="Edit genre">
-                            <img src="./images/svg/edit.svg" alt="Edit">
+                        <div class="form-set">
+                            <label for="book-title">Title <span class="aria-required">*</span></label>
+                            <input class="input" type="text" name="book-title" id="book-title" data-input-field="title" required>
+                            <div class="edit icon" title="Edit title">
+                                <img src="./images/svg/edit.svg" alt="Edit">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-set">
-                        <label for="book-pages">Total Pages</label>
-                        <input class="input" type="number" name="book-pages" id="book-pages" data-input-field="numPages">
-                        <div class="edit icon" title="Edit total pages">
-                            <img src="./images/svg/edit.svg" alt="Edit">
+                        <div class="form-set">
+                            <label for="book-author">Author <span class="aria-required">*</span></label>
+                            <input class="input" type="text" name="book-author" id="book-author" data-input-field="author" required>
+                            <div class="edit icon" title="Edit author">
+                                <img src="./images/svg/edit.svg" alt="Edit">
+                            </div>
+                        </div>
+                        <div class="form-set">
+                            <label for="book-genre">Genre</label>
+                            <select class="input" name="book-genre" id="book-genre" data-input-field="genre">
+                                <option value=""></option>
+                                <option value="Thriller">Thriller</option>
+                                <option value="Romance">Romance</option>
+                                <option value="Kid">Kid</option>
+                                <option value="Novel">Novel</option>
+                                <option value="Mystery">Mystery</option>
+                              </select>
+                            <div class="edit icon" title="Edit genre">
+                                <img src="./images/svg/edit.svg" alt="Edit">
+                            </div>
+                        </div>
+                        <div class="form-set">
+                            <label for="book-pages">Total Pages</label>
+                            <input class="input" type="number" name="book-pages" id="book-pages" data-input-field="numPages">
+                            <div class="edit icon" title="Edit total pages">
+                                <img src="./images/svg/edit.svg" alt="Edit">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -139,64 +141,61 @@
             <div class="borrow-status">Status: <span id="user-borrow-status"></span></div>
             
             <form id="borrow-form" method="dialog">
-                <fieldset class="user-status-selection">    
-                    <div class="existing-user">
-                        <input type="radio" name="user-status" id="rd-existing" value="existing" checked>
-                        <label for="rd-existing">Existing User</label>
-                    </div>
-                
-                    <div class="new-user">
-                        <input type="radio" name="user-status" id="rd-new" value="new">
-                        <label for="rd-new">New User</label>
-                    </div>
-                </fieldset>
-
-                <div class="error">
-                    <div id="user-not-found" class="hide message">ERROR: No user found.</div>
-                    <div id="user-duplicate" class="hide message">ERROR: Member ID already exists.</div>  
-                    <div id="user-not-created" class="hide message">ERROR: User cannot be created. User is null.</div>  
-                </div>
-
-                <div class="form-set hide-upon-borrowed hide-new disable-new">
-                    <label for="user-search-member-id">Search Member ID</label>
-                    <input type="search" name="user-search-member-id" id="user-search-member-id" placeholder="Search Member ID">  
+                <div class="selection-container">
+                    <fieldset class="user-status-selection">
+                        <div class="existing-user">
+                            <input type="radio" name="user-status" id="rd-existing" value="existing" checked>
+                            <label for="rd-existing">Existing User</label>
+                        </div>
                     
-                </div>
-
-                <div class="form-set hide-upon-borrowed hide-existing disable-existing for-new for-borrow"> 
-                    <label for="user-member-id">New Member ID</label>
-                    <input type="text" name="user-member-id" id="user-member-id" placeholder="Register new member ID">
+                        <div class="new-user">
+                            <input type="radio" name="user-status" id="rd-new" value="new">
+                            <label for="rd-new">New User</label>
+                        </div>
+                    </fieldset>
+                    <div class="error">
+                        <div id="user-not-found" class="hide message">ERROR: No user found.</div>
+                        <div id="user-duplicate" class="hide message">ERROR: Member ID already exists.</div>
+                        <div id="user-not-created" class="hide message">ERROR: User cannot be created. User is null.</div>
+                    </div>
                     
-                </div>
-
-                <div class="form-set disable-upon-borrowed disable-existing hide-existing-temp for-borrow">
-                    <label for="user-first-name">First Name</label>
-                    <input type="text" name="user-first-name" id="user-first-name" required> 
-                </div>
-
-                <div class="form-set disable-upon-borrowed disable-existing hide-existing-temp for-borrow">
-                    <label for="user-last-name">Last Name</label>
-                    <input type="text" name="user-last-name" id="user-last-name" required> 
-                </div>
-
-                <div class="form-set disable-upon-borrowed hide-existing-temp for-borrow">
-                    <label for="user-borrow-date">Borrow Date</label>
-                    <input type="date" name="user-borrow-date" id="user-borrow-date" required> 
-                </div>
-
-                <div class="form-set disable-upon-borrowed hide-existing-temp for-borrow">
-                    <label for="user-expected-return-date">Expected Return Date</label>
-                    <input type="date" name="user-expected-return-date" id="user-expected-return-date" required> 
-                </div>
-
-                <div class="form-set hide-new hide-existing for-return">
-                    <label for="user-actual-return-date">Actual Return Date</label>
-                    <input type="date" name="user-return-date" id="user-return-date"> 
+                    <div class="form-inner">
+                        <div class="form-set hide-upon-borrowed hide-new disable-new">
+                            <label for="user-search-member-id">Search Member ID</label>
+                            <input type="search" name="user-search-member-id" id="user-search-member-id" placeholder="Search Member ID">
+                    
+                        </div>
+                        <div class="form-set hide-upon-borrowed hide-existing disable-existing for-new for-borrow">
+                            <label for="user-member-id">New Member ID</label>
+                            <input type="text" name="user-member-id" id="user-member-id" placeholder="Register new member ID">
+                    
+                        </div>
+                        <div class="form-set disable-upon-borrowed disable-existing hide-existing-temp for-borrow">
+                            <label for="user-first-name">First Name</label>
+                            <input type="text" name="user-first-name" id="user-first-name" required>
+                        </div>
+                        <div class="form-set disable-upon-borrowed disable-existing hide-existing-temp for-borrow">
+                            <label for="user-last-name">Last Name</label>
+                            <input type="text" name="user-last-name" id="user-last-name" required>
+                        </div>
+                        <div class="form-set disable-upon-borrowed hide-existing-temp for-borrow">
+                            <label for="user-borrow-date">Borrow Date</label>
+                            <input type="date" name="user-borrow-date" id="user-borrow-date" required>
+                        </div>
+                        <div class="form-set disable-upon-borrowed hide-existing-temp for-borrow">
+                            <label for="user-expected-return-date">Expected Return Date</label>
+                            <input type="date" name="user-expected-return-date" id="user-expected-return-date" required>
+                        </div>
+                        <div class="form-set hide-new hide-existing for-return">
+                            <label for="user-actual-return-date">Actual Return Date</label>
+                            <input type="date" name="user-return-date" id="user-return-date">
+                        </div>
+                    </div>
                 </div>
 
                 
 
-                <div class="form-set">
+                <div class="borrow-history-form-set"> 
                     <h4>Borrow History</h4> 
 
                     <table id="book-borrow-history">
@@ -213,9 +212,9 @@
                     </table>
                 </div>
 
-                <button class="borrow-btn hide-upon-borrowed-btn disable-existing-btn">Borrow Book</button>
-                <button class="return-btn hide-existing-btn hide-new-btn">Return Book</button>
-                <button class="cancel" formnovalidate>Cancel</button>   
+                <button class="borrow-btn hide-upon-borrowed-btn disable-existing-btn button-primary">Borrow Book</button>
+                <button class="return-btn hide-existing-btn hide-new-btn button-primary">Return Book</button>
+                <button class="cancel button-secondary" formnovalidate>Cancel</button>   
             </form>
         </dialog>
 
