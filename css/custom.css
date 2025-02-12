@@ -458,9 +458,9 @@ button:focus-visible {
         margin: 2rem 0;
         background: rgba(182, 182, 182, 0.2);
         padding: 0.1rem 1rem 2rem 1rem;
-        max-height: 30rem;   
-        overflow-y: auto;  
-        
+        max-height: 30rem;
+        overflow-y: auto;
+
 
         h4 {
             font-weight: bold;
@@ -476,11 +476,12 @@ button:focus-visible {
         }
 
         th {
-            text-align: left; 
+            text-align: left;
         }
 
-        th, td {
-            padding: 0.5rem 1rem;   
+        th,
+        td {
+            padding: 0.5rem 1rem;
         }
     }
 
@@ -496,7 +497,37 @@ button:focus-visible {
 
         ~.hide-upon-borrowed-btn {
             display: none;
-        } 
+        }
     }
 
+}
+
+#show-users-operate {
+
+    .close-form {
+        display: flex;
+        justify-content: flex-end;
+
+    }
+
+    table,
+    td,
+    th {
+        border: 1px solid rgb(219, 219, 219);
+        border-collapse: collapse;
+    }
+
+    th {
+        text-align: left;
+    }
+
+    td,
+    th {
+        padding: 1rem;
+    }
+
+    .show-user-table {
+        max-height: 45rem;  
+        overflow-y: auto; 
+    }
 }

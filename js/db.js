@@ -58,7 +58,7 @@ const buffer = {
 }
 
 // Create initial users
-for (letter of "ABCDEFGHIJ") {
+for (letter of "ABCDE") { 
     let birthYear = random(65, 99).toString();
     let birthMonth = random(1, 12).toString();
     let birthDay = random(1, 28).toString();
@@ -68,12 +68,14 @@ for (letter of "ABCDEFGHIJ") {
     let id = birthYear + birthMonth.padStart(2, "0") + birthDay.padStart(2, "0") + middleTwoDigits.padStart(2, "0") + lastFourDigits.padStart(4, "0");
 
 
-    createUser(id, letter + letter + letter, "User");
+    let user = createUser(id, letter + letter + letter, "User");
+    user.creationType = "Auto"; 
 
 }
 
 // Create a predictable user
-createUser("0000", "Adrian", "Eu");
+let adminUser = createUser("0000", "Admin", "nimdA");
+adminUser.creationType = "Auto";
 
 // Create initial books 
 for (let i = 0; i < 2; i++) {
@@ -92,6 +94,7 @@ const modals = {
     bookOps: Array.from(document.querySelectorAll("dialog"))[0],
     borrowOps: Array.from(document.querySelectorAll("dialog"))[1],
     confirmOps: Array.from(document.querySelectorAll("dialog"))[2],
+    userOps: Array.from(document.querySelectorAll("dialog"))[3],
     func: {
         bookOps: {
             getInput: function (fieldName) {

@@ -318,6 +318,30 @@ function showBookOpsModal(evt) {
     modals.bookOps.showModal();
 };
 
+document.querySelector("#show-all-users-btn").addEventListener("click", () => {
+    const userTable = modals.userOps.querySelector("table tbody");
+    removeAllChildren(userTable); 
+    
+    users.forEach(user => {
+        let tr = document.createElement("tr");
+        let memberIDDataCell = document.createElement("td"); 
+        let fullNameDataCell = document.createElement("td");
+        let creationTypeDataCell = document.createElement("td");
+
+        memberIDDataCell.textContent = user.memberid;
+        fullNameDataCell.textContent = user.firstName + " " + user.lastName;
+        creationTypeDataCell.textContent = user.creationType; 
+
+        tr.appendChild(memberIDDataCell);
+        tr.appendChild(fullNameDataCell);
+        tr.appendChild(creationTypeDataCell);
+
+        userTable.appendChild(tr);
+    })
+
+    modals.userOps.showModal(); 
+})
+
 
 function deleteBook(btnIcon) {
     // let btnIcon = evt.currentTarget;

@@ -16,7 +16,7 @@
             <div class="inner">
                 <div id="header-title">Simply Library</div>
                 <div class="show-all-users">
-                    <button id="show-all-users-btn">Show All Users</button>
+                    <button id="show-all-users-btn" class="button-secondary">Show All Users</button>
                 </div>
                 <div>
                     Today's Date: <span id="header-date"></span>
@@ -231,21 +231,25 @@
             </form>
         </dialog>
 
-        <dialog id="show-users-operate" open> 
+        <dialog id="show-users-operate">  
             <form class="close-form" method="dialog">
                 <button class="close-btn" formnovalidate>X</button> 
             </form>
 
-            <table>
-                <thead>
-                    <th>Member ID</th>
-                    <th>Full Name</th>
-                </thead>
-
-                <tbody>
-                    
-                </tbody>
-            </table>
+            <div class="show-user-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Member ID</th>
+                            <th>Full Name</th>
+                            <th>Creation Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                
+                    </tbody>
+                </table>
+            </div>
         </dialog>
  
         <footer id="footer">

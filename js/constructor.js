@@ -31,6 +31,7 @@ function User(memberid, firstName, lastName) {
     this.memberid = memberid;
     this.firstName = firstName;
     this.lastName = lastName ? lastName : null;
+    this.creationType = "Manual";
 
     this.borrowHistory = []; 
     this.borrowedBooks = [];
